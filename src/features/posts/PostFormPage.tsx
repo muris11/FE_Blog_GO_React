@@ -30,7 +30,22 @@ export default function PostFormPage() {
   
   const [coverUrl, setCoverUrl] = useState('');
   const [selectorOpen, setSelectorOpen] = useState(false);
-  const [insertSelectorOpen, setInsertSelectorOpen] = useState(false);
+  const [mediaTarget, setMediaTarget] = useState<'cover' | 'insert' | null>(null);
+
+  const openSelector = (target: 'cover' | 'insert') => {
+    setMediaTarget(target);
+    setSelectorOpen(true);
+  };
+
+  const handleMediaSelect = (media: any) => {
+    if (mediaTarget === 'cover') {
+      setFormData(prev => ({ ...prev, cover_media_id: media.id }));
+      setCoverUrl(media.url);
+    } else if (mediaTarget === 'insert') {
+      const markdownImage = `\n![${media.alt_text || media.file_name}](${media.url})\n`;
+      setFormData(prev => ({ ...prev, content: prev.content + markdownImage }));
+    }
+  };
 
   useEffect(() => {
     document.title = isEditing ? "Edit Post | BlogForge Admin" : "Create Post | BlogForge Admin";
@@ -152,7 +167,7 @@ export default function PostFormPage() {
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <Label htmlFor="content">Content (Markdown) *</Label>
-              <Button type="button" variant="outline" size="sm" onClick={() => setInsertSelectorOpen(true)} className="sharp-corners h-7 text-xs font-mono uppercase tracking-widest">
+              <Button type="button" variant="outline" size="sm" onClick={() => openSelector('insert')} className="sharp-corners h-7 text-xs font-mono uppercase tracking-widest">
                 <ImageIcon className="mr-2 h-3 w-3" /> Insert Media
               </Button>
             </div>
@@ -218,7 +233,7 @@ export default function PostFormPage() {
                 <div className="relative border-2 border-black group">
                   <img src={coverUrl} alt="Cover Preview" className="w-full aspect-video object-cover" />
                   <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                    <Button type="button" variant="outline" size="sm" onClick={() => setSelectorOpen(true)} className="sharp-corners">
+                    <Button type="button" variant="outline" size="sm" onClick={() => openSelector('cover')} className="sharp-corners">
                       Change
                     </Button>
                     <Button type="button" variant="destructive" size="sm" onClick={() => { setCoverUrl(''); setFormData(p => ({...p, cover_media_id: ''})) }} className="sharp-corners">
@@ -227,7 +242,7 @@ export default function PostFormPage() {
                   </div>
                 </div>
               ) : (
-                <Button type="button" variant="outline" className="w-full h-32 border-dashed sharp-corners flex flex-col items-center justify-center text-muted-foreground hover:bg-neutral-50 hover:text-black" onClick={() => setSelectorOpen(true)}>
+                <Button type="button" variant="outline" className="w-full h-32 border-dashed sharp-corners flex flex-col items-center justify-center text-muted-foreground hover:bg-neutral-50 hover:text-black" onClick={() => openSelector('cover')}>
                   <ImageIcon className="h-8 w-8 mb-2" />
                   <span>Select Cover Image</span>
                 </Button>
@@ -244,18 +259,7 @@ export default function PostFormPage() {
       <MediaSelector 
         open={selectorOpen} 
         onOpenChange={setSelectorOpen} 
-        onSelect={(media) => {
-          setFormData(prev => ({ ...prev, cover_media_id: media.id }));
-          setCoverUrl(media.url);
-        }} 
-      />
-      <MediaSelector 
-        open={insertSelectorOpen} 
-        onOpenChange={setInsertSelectorOpen} 
-        onSelect={(media) => {
-          const markdownImage = `\n![${media.alt_text || media.file_name}](${media.url})\n`;
-          setFormData(prev => ({ ...prev, content: prev.content + markdownImage }));
-        }} 
+        onSelect={handleMediaSelect} 
       />
     </div>
   );
