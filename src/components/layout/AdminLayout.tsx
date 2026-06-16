@@ -22,8 +22,8 @@ export default function AdminLayout() {
     { name: 'Media', path: '/admin/media', icon: Image },
     { name: 'Users', path: '/admin/users', icon: Users },
     { name: 'Comments', path: '/admin/comments', icon: MessageSquare },
-    { name: 'Settings', path: '/admin/settings', icon: Settings, role: 'Admin' },
-    { name: 'Audit Logs', path: '/admin/audit-logs', icon: Activity, role: 'Admin' },
+    { name: 'Settings', path: '/admin/settings', icon: Settings, roles: ['Admin', 'Super Admin'] },
+    { name: 'Audit Logs', path: '/admin/audit-logs', icon: Activity, roles: ['Admin', 'Super Admin'] },
   ];
 
   return (
@@ -37,7 +37,7 @@ export default function AdminLayout() {
         <div className="p-4 flex-1 overflow-y-auto">
           <nav className="space-y-2">
             {navItems.map((item) => {
-              if (item.role && user?.role !== item.role) return null;
+              if (item.roles && !item.roles.includes(user?.role || '')) return null;
               const isActive = location.pathname === item.path || 
                                (item.path !== '/admin' && location.pathname.startsWith(item.path));
               return (

@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { MediaSelector } from '@/components/MediaSelector';
+import { Plus, Trash2 } from 'lucide-react';
 
 export default function SettingsPage() {
   const [settings, setSettings] = useState<Record<string, any>>({});
@@ -83,7 +84,7 @@ export default function SettingsPage() {
               <Input 
                 value={settings.site_name || ''} 
                 onChange={(e) => handleChange('site_name', e.target.value)} 
-                className="sharp-corners"
+                className="sharp-corners border-2 border-black"
               />
             </div>
             <div className="space-y-2">
@@ -91,7 +92,7 @@ export default function SettingsPage() {
               <Input 
                 value={settings.site_tagline || ''} 
                 onChange={(e) => handleChange('site_tagline', e.target.value)} 
-                className="sharp-corners"
+                className="sharp-corners border-2 border-black"
               />
             </div>
             <div className="space-y-2">
@@ -138,7 +139,7 @@ export default function SettingsPage() {
               <Input 
                 value={settings.seo_default_title || ''} 
                 onChange={(e) => handleChange('seo_default_title', e.target.value)} 
-                className="sharp-corners"
+                className="sharp-corners border-2 border-black"
               />
             </div>
             <div className="space-y-2">
@@ -146,7 +147,7 @@ export default function SettingsPage() {
               <Input 
                 value={settings.seo_default_desc || ''} 
                 onChange={(e) => handleChange('seo_default_desc', e.target.value)} 
-                className="sharp-corners"
+                className="sharp-corners border-2 border-black"
               />
             </div>
             <div className="space-y-2">
@@ -177,7 +178,7 @@ export default function SettingsPage() {
               <Input 
                 value={settings.contact_email || ''} 
                 onChange={(e) => handleChange('contact_email', e.target.value)} 
-                className="sharp-corners font-mono text-sm"
+                className="sharp-corners border-2 border-black font-mono text-sm"
               />
             </div>
             <div className="space-y-2">
@@ -185,25 +186,74 @@ export default function SettingsPage() {
               <Input 
                 value={settings.footer_text || ''} 
                 onChange={(e) => handleChange('footer_text', e.target.value)} 
-                className="sharp-corners"
+                className="sharp-corners border-2 border-black"
               />
             </div>
-            <div className="space-y-2 md:col-span-2">
-              <Label className="font-mono text-xs font-bold uppercase tracking-widest">Social Links (JSON Array)</Label>
-              <Input 
-                value={settings.social_links ? JSON.stringify(settings.social_links) : ''} 
-                onChange={(e) => {
-                  try {
-                    const parsed = JSON.parse(e.target.value);
-                    handleChange('social_links', parsed);
-                  } catch {
-                    // Ignore parsing errors while typing, real app might use a proper JSON editor
-                    handleChange('social_links', e.target.value);
-                  }
-                }} 
-                className="sharp-corners font-mono text-sm"
-                placeholder='[{"platform":"twitter","url":"https://twitter.com/..."}]'
-              />
+            <div className="space-y-4 md:col-span-2">
+              <div className="flex justify-between items-center border-b-2 border-black pb-2">
+                <Label className="font-mono text-xs font-bold uppercase tracking-widest">Social Links</Label>
+                <Button 
+                  type="button" 
+                  onClick={() => {
+                    const current = Array.isArray(settings.social_links) ? settings.social_links : [];
+                    handleChange('social_links', [...current, { platform: '', url: '' }]);
+                  }}
+                  variant="outline" 
+                  size="sm" 
+                  className="sharp-corners font-mono text-xs"
+                >
+                  <Plus className="h-4 w-4 mr-2" /> Add Link
+                </Button>
+              </div>
+              
+              <div className="space-y-4">
+                {Array.isArray(settings.social_links) && settings.social_links.length > 0 ? (
+                  settings.social_links.map((link: any, index: number) => (
+                    <div key={index} className="flex items-start gap-4">
+                      <div className="flex-1">
+                        <Input 
+                          placeholder="Platform (e.g. twitter)" 
+                          value={link.platform || ''}
+                          onChange={(e) => {
+                            const newLinks = [...settings.social_links];
+                            newLinks[index].platform = e.target.value;
+                            handleChange('social_links', newLinks);
+                          }}
+                          className="sharp-corners border-2 border-black"
+                        />
+                      </div>
+                      <div className="flex-[2]">
+                        <Input 
+                          placeholder="URL (e.g. https://twitter.com/...)" 
+                          value={link.url || ''}
+                          onChange={(e) => {
+                            const newLinks = [...settings.social_links];
+                            newLinks[index].url = e.target.value;
+                            handleChange('social_links', newLinks);
+                          }}
+                          className="sharp-corners border-2 border-black"
+                        />
+                      </div>
+                      <Button 
+                        type="button" 
+                        variant="destructive" 
+                        className="sharp-corners shrink-0"
+                        onClick={() => {
+                          const newLinks = [...settings.social_links];
+                          newLinks.splice(index, 1);
+                          handleChange('social_links', newLinks);
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center p-4 border-2 border-dashed border-gray-300 sharp-corners text-gray-500 font-mono text-sm">
+                    No social links added yet.
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
