@@ -111,7 +111,7 @@ export default function ArticleDetailPage() {
               {post.cover_url && (
                 <figure className="mb-12 border-b-2 border-black pb-4 relative">
                   <div className="aspect-video bg-[radial-gradient(#000_1px,transparent_1px)] bg-[size:16px_16px] p-2 border border-black mb-4">
-                    <img src={post.cover_url} alt={post.title} className="w-full h-auto object-cover grayscale" />
+                    <img src={post.cover_url} alt={post.title} className="w-full h-full object-cover grayscale" />
                   </div>
                   <figcaption className="text-right font-mono text-xs uppercase tracking-widest text-muted-foreground">
                     Fig 1. {post.title}
