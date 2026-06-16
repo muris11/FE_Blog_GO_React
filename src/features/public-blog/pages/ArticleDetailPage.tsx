@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { apiClient } from '@/lib/api-client';
 import { format } from 'date-fns';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import CommentSection from '../components/CommentSection';
 
 export default function ArticleDetailPage() {
@@ -117,10 +119,11 @@ export default function ArticleDetailPage() {
                 </figure>
               )}
 
-              <div 
-                className="prose prose-lg prose-slate max-w-none font-body text-justify leading-relaxed prose-headings:font-serif prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tight prose-a:text-accent prose-a:underline-offset-4 prose-a:decoration-2 hover:prose-a:bg-accent hover:prose-a:text-white [&>p:first-of-type]:first-letter:float-left [&>p:first-of-type]:first-letter:text-7xl [&>p:first-of-type]:first-letter:font-serif [&>p:first-of-type]:first-letter:font-black [&>p:first-of-type]:first-letter:text-accent [&>p:first-of-type]:first-letter:pr-3 [&>p:first-of-type]:first-letter:leading-none [&>p:first-of-type]:first-letter:mt-2"
-                dangerouslySetInnerHTML={{ __html: post.content }} 
-              />
+              <div className="prose prose-lg prose-slate max-w-none font-body text-justify leading-relaxed prose-headings:font-serif prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tight prose-img:border-2 prose-img:border-black prose-img:p-1 prose-img:bg-neutral-100 prose-a:text-accent prose-a:underline-offset-4 prose-a:decoration-2 hover:prose-a:bg-accent hover:prose-a:text-white [&>p:first-of-type]:first-letter:float-left [&>p:first-of-type]:first-letter:text-7xl [&>p:first-of-type]:first-letter:font-serif [&>p:first-of-type]:first-letter:font-black [&>p:first-of-type]:first-letter:text-accent [&>p:first-of-type]:first-letter:pr-3 [&>p:first-of-type]:first-letter:leading-none [&>p:first-of-type]:first-letter:mt-2">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {post.content}
+                </ReactMarkdown>
+              </div>
               {post.allow_comments && <CommentSection postId={post.id} />}
             </div>
           </div>
