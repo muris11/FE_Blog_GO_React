@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { apiClient } from '@/lib/api-client';
-import { format } from 'date-fns';
+import { formatDate } from '@/lib/date';
 import { FileText, FolderTree, MessageSquare, Tags, Eye, Activity, ArrowRight } from 'lucide-react';
 
 export default function DashboardPage() {
@@ -90,7 +90,7 @@ export default function DashboardPage() {
                       }`}>
                         {post.status}
                       </span>
-                      <span>{format(new Date(post.created_at), 'MMM d, yyyy')}</span>
+                      <span>{formatDate(post.created_at, 'MMM d, yyyy')}</span>
                     </div>
                   </div>
                 </Link>
@@ -125,7 +125,7 @@ export default function DashboardPage() {
                   </div>
                   <p className="text-sm text-muted-foreground line-clamp-2">{comment.content}</p>
                   <p className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mt-1">
-                    {format(new Date(comment.created_at), 'MMM d, yyyy HH:mm')}
+                    {formatDate(comment.created_at, 'MMM d, yyyy HH:mm')}
                   </p>
                 </div>
               ))
@@ -161,7 +161,7 @@ export default function DashboardPage() {
               {stats?.recent_audit_logs?.length > 0 ? (
                 stats.recent_audit_logs.map((log: any) => (
                   <tr key={log.id} className="hover:bg-neutral-50">
-                    <td className="p-3 whitespace-nowrap">{format(new Date(log.created_at), 'MMM d, HH:mm')}</td>
+                    <td className="p-3 whitespace-nowrap">{formatDate(log.created_at, 'MMM d, HH:mm')}</td>
                     <td className="p-3">{log.user_name || 'System'}</td>
                     <td className="p-3">
                       <span className={`px-1.5 py-0.5 border text-[10px] uppercase tracking-widest ${

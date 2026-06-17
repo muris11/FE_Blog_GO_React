@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { apiClient } from '@/lib/api-client';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { format } from 'date-fns';
+import { formatDate } from '@/lib/date';
 import { MessageSquare, RefreshCw } from 'lucide-react';
 
 export default function CommentsPage() {
@@ -92,7 +92,7 @@ export default function CommentsPage() {
                       </span>
                     </div>
                     <p className="text-sm text-muted-foreground mb-3 font-mono">
-                      On Post ID: {comment.post_id.substring(0, 8)}... &middot; {format(new Date(comment.created_at), 'MMM d, yyyy HH:mm')}
+                      On Post ID: {comment.post_id.substring(0, 8)}... &middot; {formatDate(comment.created_at, 'MMM d, yyyy HH:mm')}
                     </p>
                     <p className="font-body text-base">{comment.content}</p>
                   </div>

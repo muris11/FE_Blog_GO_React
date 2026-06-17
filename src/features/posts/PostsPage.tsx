@@ -5,7 +5,7 @@ import { apiClient } from '@/lib/api-client';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { format } from 'date-fns';
+import { formatDate } from '@/lib/date';
 import { Plus, Edit, Trash2, Eye } from 'lucide-react';
 
 export default function PostsPage() {
@@ -104,7 +104,7 @@ export default function PostsPage() {
                   <TableCell>{post.category?.name}</TableCell>
                   <TableCell>{post.author?.name}</TableCell>
                   <TableCell>
-                    {post.published_at ? format(new Date(post.published_at), 'MMM d, yyyy') : '-'}
+                    {formatDate(post.published_at, 'MMM d, yyyy')}
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">

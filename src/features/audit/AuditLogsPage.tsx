@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { apiClient } from '@/lib/api-client';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { format } from 'date-fns';
+import { formatDate } from '@/lib/date';
 
 export default function AuditLogsPage() {
   const [logs, setLogs] = useState<any[]>([]);
@@ -74,7 +74,7 @@ export default function AuditLogsPage() {
               logs.map((log) => (
                 <TableRow key={log.id}>
                   <TableCell className="whitespace-nowrap">
-                    {format(new Date(log.created_at), 'MMM d, yyyy HH:mm:ss')}
+                    {formatDate(log.created_at, 'MMM d, yyyy HH:mm:ss')}
                   </TableCell>
                   <TableCell>{log.user?.name || 'System'}</TableCell>
                   <TableCell>{getActionBadge(log.action)}</TableCell>

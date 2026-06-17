@@ -3,7 +3,7 @@ import { apiClient } from '@/lib/api-client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { format } from 'date-fns';
+import { formatDate } from '@/lib/date';
 
 interface Comment {
   id: string;
@@ -79,7 +79,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
               <div className="flex items-center justify-between mb-4 border-b border-black pb-2">
                 <div className="font-bold font-mono text-sm uppercase tracking-widest">{comment.author_name}</div>
                 <div className="text-xs text-muted-foreground font-mono uppercase tracking-widest">
-                  {format(new Date(comment.created_at), 'MMM d, yyyy HH:mm')}
+                  {formatDate(comment.created_at, 'MMM d, yyyy HH:mm')}
                 </div>
               </div>
               <p className="font-body text-base text-justify whitespace-pre-wrap">{comment.content}</p>

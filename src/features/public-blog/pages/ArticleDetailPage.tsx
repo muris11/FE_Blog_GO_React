@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { apiClient } from '@/lib/api-client';
 import { updateMeta } from '@/lib/seo';
 import { format } from 'date-fns';
+import { formatDate } from '@/lib/date';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import CommentSection from '../components/CommentSection';
@@ -83,7 +84,7 @@ export default function ArticleDetailPage() {
               </div>
               <span className="hidden md:inline">•</span>
               <time dateTime={post.published_at || post.created_at}>
-                {format(new Date(post.published_at || post.created_at), 'MMMM d, yyyy')}
+                {formatDate(post.published_at || post.created_at, 'MMMM d, yyyy')}
               </time>
               <span className="hidden md:inline">•</span>
               <span>{post.reading_time_minutes} MIN READ</span>
@@ -149,7 +150,7 @@ export default function ArticleDetailPage() {
                           <p className="font-mono text-[10px] uppercase tracking-widest text-accent mb-2">{rp.category?.name}</p>
                           <h3 className="font-serif font-black text-lg leading-tight group-hover:text-accent transition-colors">{rp.title}</h3>
                           <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground mt-2">
-                            {format(new Date(rp.published_at || rp.created_at), 'MMM d, yyyy')}
+                            {formatDate(rp.published_at || rp.created_at, 'MMM d, yyyy')}
                           </p>
                         </div>
                       </Link>

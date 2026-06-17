@@ -4,6 +4,7 @@ import { apiClient } from '@/lib/api-client';
 import { updateMeta } from '@/lib/seo';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { format } from 'date-fns';
+import { formatDate } from '@/lib/date';
 
 export default function PublicHomePage() {
   const [data, setData] = useState<any>(null);
@@ -100,7 +101,7 @@ export default function PublicHomePage() {
                     </CardDescription>
                     <div className="flex items-center justify-between text-xs font-mono uppercase tracking-widest border-t border-black pt-4">
                       <span className="font-bold">BY {post.author.name}</span>
-                      <span className="text-muted-foreground">{format(new Date(post.published_at || post.created_at), 'MMM d, yyyy')}</span>
+                      <span className="text-muted-foreground">{formatDate(post.published_at || post.created_at, 'MMM d, yyyy')}</span>
                     </div>
                   </CardContent>
                 </Card>
