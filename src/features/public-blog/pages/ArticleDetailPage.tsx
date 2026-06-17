@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { apiClient } from '@/lib/api-client';
+import { updateMeta } from '@/lib/seo';
 import { format } from 'date-fns';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -16,8 +17,13 @@ export default function ArticleDetailPage() {
     const fetchPost = async () => {
       try {
         const response = await apiClient.get(`/public/posts/${slug}`);
-        setPost(response.data.data);
-        document.title = `${response.data.data.title} | BlogForge`;
+        const p = response.data.data;
+        setPost(p);
+        updateMeta(`${p.title} — BlogForge`, {
+          description: p.excerpt || p.seo_description,
+          image: p.cover_url,
+          url: `${window.location.origin}/blog/${p.slug}`,
+        });
       } catch (err: any) {
         setError(err.response?.data?.message || 'Article not found');
       } finally {
@@ -76,8 +82,8 @@ export default function ArticleDetailPage() {
                 <span className="font-bold">BY {post.author?.name}</span>
               </div>
               <span className="hidden md:inline">•</span>
-              <time dateTime={post.published_at}>
-                {post.published_at ? format(new Date(post.published_at), 'MMMM d, yyyy') : 'Unknown Date'}
+              <time dateTime={post.published_at || post.created_at}>
+                {format(new Date(post.published_at || post.created_at), 'MMMM d, yyyy')}
               </time>
               <span className="hidden md:inline">•</span>
               <span>{post.reading_time_minutes} MIN READ</span>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { apiClient } from '@/lib/api-client';
+import { updateMeta } from '@/lib/seo';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { format } from 'date-fns';
 
@@ -9,7 +10,9 @@ export default function BlogPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    document.title = "The Archives | BlogForge";
+    updateMeta("The Archives — BlogForge", {
+      description: "Explore all articles, stories, and features from BlogForge.",
+    });
     const fetchPosts = async () => {
       try {
         const response = await apiClient.get('/public/posts');
@@ -76,7 +79,7 @@ export default function BlogPage() {
                     </CardDescription>
                     <div className="flex items-center justify-between text-xs font-mono uppercase tracking-widest border-t border-black pt-4">
                       <span className="font-bold">BY {post.author?.name || 'Staff'}</span>
-                      <span className="text-muted-foreground">{post.published_at ? format(new Date(post.published_at), 'MM/dd/yyyy') : 'N/A'}</span>
+                      <span className="text-muted-foreground">{format(new Date(post.published_at || post.created_at), 'MMM d, yyyy')}</span>
                     </div>
                   </CardContent>
                 </Card>

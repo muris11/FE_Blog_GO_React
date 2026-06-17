@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { apiClient } from '@/lib/api-client';
+import { updateMeta } from '@/lib/seo';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { format } from 'date-fns';
 
@@ -9,7 +10,9 @@ export default function PublicHomePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    document.title = "BlogForge | Home";
+    updateMeta("BlogForge — The Complete CMS Solution", {
+      description: "A modern, clean, and blazingly fast content management system built with Go and React.",
+    });
     const fetchHomeData = async () => {
       try {
         const response = await apiClient.get('/public/home');
@@ -97,7 +100,7 @@ export default function PublicHomePage() {
                     </CardDescription>
                     <div className="flex items-center justify-between text-xs font-mono uppercase tracking-widest border-t border-black pt-4">
                       <span className="font-bold">BY {post.author.name}</span>
-                      <span className="text-muted-foreground">{post.published_at ? format(new Date(post.published_at), 'MM/dd/yyyy') : 'N/A'}</span>
+                      <span className="text-muted-foreground">{format(new Date(post.published_at || post.created_at), 'MMM d, yyyy')}</span>
                     </div>
                   </CardContent>
                 </Card>
