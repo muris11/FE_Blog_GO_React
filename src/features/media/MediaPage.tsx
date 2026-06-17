@@ -17,10 +17,12 @@ export default function MediaPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingMedia, setEditingMedia] = useState<any>(null);
   const [formData, setFormData] = useState({ alt_text: '', caption: '' });
-  
+  const [editError, setEditError] = useState('');
+
   // Delete dialog state
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [mediaToDelete, setMediaToDelete] = useState<any>(null);
+  const [deleteError, setDeleteError] = useState('');
 
   useEffect(() => {
     document.title = "Media Library | BlogForge Admin";
@@ -72,28 +74,31 @@ export default function MediaPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingMedia) return;
+    setEditError('');
     try {
       await apiClient.put(`/admin/media/${editingMedia.id}`, formData);
       setIsDialogOpen(false);
       fetchMedias();
-    } catch (error) {
-      console.error('Error updating media', error);
+    } catch (error: any) {
+      setEditError(error.response?.data?.errors || error.response?.data?.message || 'Failed to update media');
     }
   };
 
   const confirmDelete = (media: any) => {
     setMediaToDelete(media);
+    setDeleteError('');
     setIsDeleteDialogOpen(true);
   };
 
   const handleDelete = async () => {
     if (!mediaToDelete) return;
+    setDeleteError('');
     try {
       await apiClient.delete(`/admin/media/${mediaToDelete.id}`);
       setIsDeleteDialogOpen(false);
       fetchMedias();
-    } catch (error) {
-      console.error('Error deleting media', error);
+    } catch (error: any) {
+      setDeleteError(error.response?.data?.errors || error.response?.data?.message || 'Failed to delete media');
     }
   };
 
@@ -164,6 +169,11 @@ export default function MediaPage() {
             </DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
+            {editError && (
+              <div className="p-3 text-sm text-red-600 bg-red-50 border-2 border-red-200 sharp-corners">
+                {editError}
+              </div>
+            )}
             <div className="space-y-2">
               <Label htmlFor="alt_text" className="font-mono text-xs font-bold uppercase tracking-widest">Alt Text</Label>
               <Input 
@@ -208,6 +218,11 @@ export default function MediaPage() {
           <div className="py-4">
             Are you sure you want to delete <span className="font-bold truncate">{mediaToDelete?.file_name}</span>?
           </div>
+          {deleteError && (
+            <div className="px-4 pb-2 text-sm text-red-600 bg-red-50 border-2 border-red-200 sharp-corners p-2">
+              {deleteError}
+            </div>
+          )}
           <DialogFooter className="pt-4 border-t-2 border-black mt-6">
             <Button type="button" variant="outline" onClick={() => setIsDeleteDialogOpen(false)} className="sharp-corners">
               Cancel
