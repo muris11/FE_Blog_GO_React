@@ -70,8 +70,17 @@ export default function SettingsPage() {
         <div>
           <h1 className="text-3xl font-black font-serif uppercase tracking-tighter">Site Settings</h1>
           <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground mt-2">Configure global platform options</p>
+            <div className="space-y-2 md:col-span-2">
+              <Label className="font-mono text-xs font-bold uppercase tracking-widest">Marquee Text (Running Text)</Label>
+              <Input 
+                value={settings.marquee_text || ''} 
+                onChange={(e) => handleChange('marquee_text', e.target.value)} 
+                placeholder="VOL. 1 • THE BLOGFORGE EDITION • ALL THE NEWS THAT'S FIT TO PRINT"
+                className="sharp-corners border-2 border-black"
+              />
+            </div>
+          </div>
         </div>
-      </div>
 
       <form onSubmit={handleSubmit} className="space-y-8">
         

@@ -91,7 +91,7 @@ export default function ArticleDetailPage() {
       {/* Marquee Header */}
       <div className="bg-foreground text-background py-1 overflow-hidden whitespace-nowrap border-b-2 border-black flex items-center">
         <div className="animate-marquee inline-block font-mono text-xs uppercase tracking-widest pl-[100%]">
-          VOL. 1 • {format(new Date(), 'EEEE, MMMM d, yyyy')} • THE BLOGFORGE EDITION • ALL THE NEWS THAT'S FIT TO PRINT • LATEST UPDATES • STAY INFORMED
+          {format(new Date(), 'EEEE, MMMM d, yyyy')} • {settings.marquee_text || "THE BLOGFORGE EDITION • ALL THE NEWS THAT'S FIT TO PRINT • LATEST UPDATES • STAY INFORMED"}
         </div>
       </div>
 

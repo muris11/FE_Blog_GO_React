@@ -6,6 +6,7 @@ interface SiteSettings {
   site_tagline?: string;
   site_description?: string;
   site_features?: string[];
+  marquee_text?: string;
   site_logo?: string;
   site_favicon?: string;
   seo_default_title?: string;
