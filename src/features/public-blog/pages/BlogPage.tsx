@@ -43,7 +43,7 @@ export default function BlogPage() {
   );
 
   return (
-    <div className="min-h-screen flex flex-col bg-background selection:bg-accent selection:text-white">
+    <div className="min-h-screen flex flex-col bg-background selection:bg-accent selection:text-white overflow-x-hidden">
       {/* Marquee Header */}
       <div className="bg-foreground text-background py-1 overflow-hidden whitespace-nowrap border-b-2 border-black flex items-center">
         <div className="animate-marquee inline-block font-mono text-xs uppercase tracking-widest pl-[100%]">
@@ -64,8 +64,8 @@ export default function BlogPage() {
       </header>
 
       <main className="flex-1 container mx-auto px-4 py-8 newsprint-texture">
-        <section className="py-12 md:py-20 border-b-4 border-black mb-12">
-          <h1 className="text-6xl sm:text-8xl lg:text-9xl font-black font-serif tracking-tighter mb-8 leading-[0.9] text-foreground uppercase text-center">
+        <section className="py-10 md:py-16 border-b-4 border-black mb-10 overflow-hidden">
+          <h1 className="text-5xl sm:text-7xl lg:text-[8rem] font-black font-serif tracking-tighter mb-6 leading-[0.85] text-foreground uppercase text-center break-words hyphens-auto">
             The Archives.
           </h1>
         </section>
@@ -75,9 +75,9 @@ export default function BlogPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {data.map((post: any) => (
                 <Card key={post.id} className="overflow-hidden flex flex-col hard-shadow-hover hover:bg-neutral-100 group">
-                  <div className="aspect-video border-b border-black relative bg-[radial-gradient(#000_1px,transparent_1px)] bg-[size:16px_16px] opacity-90 group-hover:opacity-100 transition-opacity bg-white">
+                  <div className="aspect-video border-b border-black relative bg-[radial-gradient(#000_1px,transparent_1px)] bg-[size:16px_16px] opacity-90 group-hover:opacity-100 transition-opacity">
                     {post.cover_url ? (
-                      <img src={post.cover_url} alt={post.title} className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105 p-2" />
+                      <img src={post.cover_url} alt={post.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center font-mono text-xs uppercase tracking-widest">Fig 1. Image Unavailable</div>
                     )}

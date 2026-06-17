@@ -87,7 +87,7 @@ export default function ArticleDetailPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-background selection:bg-accent selection:text-white">
+    <div className="min-h-screen flex flex-col bg-background selection:bg-accent selection:text-white overflow-x-hidden">
       {/* Marquee Header */}
       <div className="bg-foreground text-background py-1 overflow-hidden whitespace-nowrap border-b-2 border-black flex items-center">
         <div className="animate-marquee inline-block font-mono text-xs uppercase tracking-widest pl-[100%]">
@@ -113,10 +113,10 @@ export default function ArticleDetailPage() {
             <div className="mb-6 inline-block border border-black px-4 py-1 font-mono text-xs uppercase tracking-widest text-accent">
               {post.category?.name}
             </div>
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black font-serif tracking-tighter mb-8 leading-[0.9] text-foreground uppercase">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black font-serif tracking-tighter mb-6 md:mb-8 leading-[0.9] text-foreground uppercase break-words hyphens-auto">
               {post.title}
             </h1>
-            <p className="text-xl md:text-2xl font-body leading-relaxed text-foreground max-w-3xl mx-auto italic mb-10">
+            <p className="text-lg md:text-xl font-body leading-relaxed text-foreground max-w-3xl mx-auto italic mb-8 md:mb-10">
               {post.excerpt}
             </p>
             <div className="flex flex-col md:flex-row items-center justify-center gap-4 text-xs font-mono uppercase tracking-widest border-y border-black py-4">
@@ -157,11 +157,11 @@ export default function ArticleDetailPage() {
             {/* Main Content */}
             <div className="lg:col-span-9 p-8 md:p-12">
               {post.cover_url && (
-                <figure className="mb-12 border-b-2 border-black pb-4 relative">
-                  <div className="w-full bg-[radial-gradient(#000_1px,transparent_1px)] bg-[size:16px_16px] p-2 border border-black mb-4 flex justify-center">
-                    <img src={post.cover_url} alt={post.title} className="max-w-full max-h-[70vh] object-contain" />
+                <figure className="mb-8 md:mb-12 border-b-2 border-black pb-4 relative">
+                  <div className="aspect-video bg-[radial-gradient(#000_1px,transparent_1px)] bg-[size:16px_16px] p-1 md:p-2 border border-black mb-4">
+                    <img src={post.cover_url} alt={post.title} className="w-full h-full object-cover" />
                   </div>
-                  <figcaption className="text-right font-mono text-xs uppercase tracking-widest text-muted-foreground">
+                  <figcaption className="text-right font-mono text-[10px] md:text-xs uppercase tracking-widest text-muted-foreground">
                     Fig 1. {post.title}
                   </figcaption>
                 </figure>
