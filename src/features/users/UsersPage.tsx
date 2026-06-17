@@ -18,10 +18,12 @@ export default function UsersPage() {
   const [formData, setFormData] = useState({ 
     name: '', username: '', email: '', password: '', role_id: '', status: 'active' 
   });
+  const [editError, setEditError] = useState('');
   
   // Delete dialog state
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [userToDelete, setUserToDelete] = useState<any>(null);
+  const [deleteError, setDeleteError] = useState('');
 
   useEffect(() => {
     document.title = "Users | BlogForge Admin";
@@ -63,6 +65,7 @@ export default function UsersPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setEditError('');
     try {
       const dataToSubmit = { ...formData };
       if (editingUser && !dataToSubmit.password) {
@@ -76,24 +79,26 @@ export default function UsersPage() {
       }
       setIsDialogOpen(false);
       fetchData();
-    } catch (error) {
-      console.error('Error saving user', error);
+    } catch (error: any) {
+      setEditError(error.response?.data?.errors || error.response?.data?.message || 'Failed to save user');
     }
   };
 
   const confirmDelete = (user: any) => {
     setUserToDelete(user);
+    setDeleteError('');
     setIsDeleteDialogOpen(true);
   };
 
   const handleDelete = async () => {
     if (!userToDelete) return;
+    setDeleteError('');
     try {
       await apiClient.delete(`/admin/users/${userToDelete.id}`);
       setIsDeleteDialogOpen(false);
       fetchData();
-    } catch (error) {
-      console.error('Error deleting user', error);
+    } catch (error: any) {
+      setDeleteError(error.response?.data?.errors || error.response?.data?.message || 'Failed to delete user');
     }
   };
 
@@ -167,6 +172,11 @@ export default function UsersPage() {
             </DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
+            {editError && (
+              <div className="p-3 text-sm text-red-600 bg-red-50 border-2 border-red-200 sharp-corners">
+                {editError}
+              </div>
+            )}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="name" className="font-mono text-xs font-bold uppercase tracking-widest">Name</Label>
@@ -266,6 +276,11 @@ export default function UsersPage() {
           <div className="py-4">
             Are you sure you want to delete user <span className="font-bold">{userToDelete?.name}</span>?
           </div>
+          {deleteError && (
+            <div className="px-4 pb-2 text-sm text-red-600 bg-red-50 border-2 border-red-200 sharp-corners p-2">
+              {deleteError}
+            </div>
+          )}
           <DialogFooter className="pt-4 border-t-2 border-black mt-6">
             <Button type="button" variant="outline" onClick={() => setIsDeleteDialogOpen(false)} className="sharp-corners">
               Cancel
