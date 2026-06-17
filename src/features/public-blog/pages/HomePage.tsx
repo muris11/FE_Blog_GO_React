@@ -40,7 +40,7 @@ export default function PublicHomePage() {
           <Link to="/" className="text-3xl md:text-5xl font-black font-serif tracking-tighter uppercase text-foreground">BlogForge.</Link>
           <nav className="hidden md:flex gap-8 font-mono text-sm uppercase tracking-widest">
             <Link to="/blog" className="text-foreground hover:text-accent transition-colors">Articles</Link>
-            <Link to="/login" className="text-foreground hover:text-accent transition-colors">Admin Login</Link>
+
           </nav>
         </div>
       </header>
