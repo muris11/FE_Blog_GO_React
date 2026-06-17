@@ -94,7 +94,7 @@ export default function PublicHomePage() {
                 <Card key={post.id} className="overflow-hidden flex flex-col hard-shadow-hover hover:bg-neutral-100 group">
                   <div className="aspect-video border-b border-black relative bg-[radial-gradient(#000_1px,transparent_1px)] bg-[size:16px_16px] opacity-90 group-hover:opacity-100 transition-opacity">
                     {post.cover_url ? (
-                      <img src={post.cover_url} alt={post.title} className="w-full h-full object-cover grayscale group-hover:sepia-[30%] transition-all duration-500" />
+                      <img src={post.cover_url} alt={post.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center font-mono text-xs uppercase tracking-widest">Fig 1. Image Unavailable</div>
                     )}
