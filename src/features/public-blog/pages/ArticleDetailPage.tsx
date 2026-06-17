@@ -9,6 +9,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import CommentSection from '../components/CommentSection';
 import { Share2, Link as LinkIcon, Check } from 'lucide-react';
+import LoadingState from '@/components/ui/loading-state';
 
 const TwitterIcon = () => (
   <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
@@ -66,7 +67,14 @@ export default function ArticleDetailPage() {
     setTimeout(() => setCopied(false), 2000);
   };
   
-  if (loading) return <div className="p-8 text-center">Loading article...</div>;
+  if (loading) return (
+    <div className="min-h-screen flex flex-col bg-background">
+      <header className="border-b-2 border-black bg-background h-20 flex items-center px-4">
+        <Link to="/" className="text-3xl font-black font-serif uppercase">{settings.site_name || 'BlogForge.'}</Link>
+      </header>
+      <LoadingState message="Loading Article..." />
+    </div>
+  );
   
   if (error || !post) {
     return (

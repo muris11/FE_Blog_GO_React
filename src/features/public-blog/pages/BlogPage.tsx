@@ -6,6 +6,7 @@ import { useSiteSettings } from '@/contexts/SiteSettingsContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { format } from 'date-fns';
 import { formatDate } from '@/lib/date';
+import LoadingState from '@/components/ui/loading-state';
 
 export default function BlogPage() {
   const [data, setData] = useState<any[]>([]);
@@ -32,7 +33,14 @@ export default function BlogPage() {
     fetchPosts();
   }, []);
 
-  if (loading) return <div className="p-8 text-center font-mono uppercase tracking-widest text-xs">Loading the presses...</div>;
+  if (loading) return (
+    <div className="min-h-screen flex flex-col bg-background">
+      <header className="border-b-2 border-black bg-background h-20 flex items-center px-4">
+        <Link to="/" className="text-3xl font-black font-serif uppercase">{settings.site_name || 'BlogForge.'}</Link>
+      </header>
+      <LoadingState message="Loading Archives..." />
+    </div>
+  );
 
   return (
     <div className="min-h-screen flex flex-col bg-background selection:bg-accent selection:text-white">

@@ -6,6 +6,7 @@ import { useSiteSettings } from '@/contexts/SiteSettingsContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { format } from 'date-fns';
 import { formatDate } from '@/lib/date';
+import LoadingState from '@/components/ui/loading-state';
 
 export default function PublicHomePage() {
   const [data, setData] = useState<any>(null);
@@ -32,7 +33,14 @@ export default function PublicHomePage() {
     fetchHomeData();
   }, []);
 
-  if (loading) return <div className="p-8 text-center">Loading...</div>;
+  if (loading) return (
+    <div className="min-h-screen flex flex-col bg-background">
+      <header className="border-b-2 border-black bg-background h-20 flex items-center px-4">
+        <span className="text-3xl font-black font-serif uppercase">{settings.site_name || 'BlogForge.'}</span>
+      </header>
+      <LoadingState message="Loading Headlines..." />
+    </div>
+  );
 
   return (
     <div className="min-h-screen flex flex-col bg-background selection:bg-accent selection:text-white">
