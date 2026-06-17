@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { apiClient } from '@/lib/api-client';
 import { updateMeta } from '@/lib/seo';
+import { useSiteSettings } from '@/contexts/SiteSettingsContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { format } from 'date-fns';
 import { formatDate } from '@/lib/date';
@@ -10,9 +11,12 @@ export default function PublicHomePage() {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
+  const { settings } = useSiteSettings();
+
   useEffect(() => {
-    updateMeta("BlogForge — The Complete CMS Solution", {
-      description: "A modern, clean, and blazingly fast content management system built with Go and React.",
+    updateMeta(settings.seo_default_title || "BlogForge — The Complete CMS Solution", {
+      description: settings.seo_default_desc || "A modern, clean, and blazingly fast content management system built with Go and React.",
+      image: settings.seo_default_ogimage
     });
     const fetchHomeData = async () => {
       try {
@@ -41,7 +45,13 @@ export default function PublicHomePage() {
 
       <header className="border-b-2 border-black bg-background sticky top-0 z-40">
         <div className="container mx-auto px-4 h-20 flex items-center justify-between">
-          <Link to="/" className="text-3xl md:text-5xl font-black font-serif tracking-tighter uppercase text-foreground">BlogForge.</Link>
+          <Link to="/" className="text-3xl md:text-5xl font-black font-serif tracking-tighter uppercase text-foreground">
+            {settings.site_logo ? (
+              <img src={settings.site_logo} alt={settings.site_name || "BlogForge"} className="h-10 md:h-12 object-contain" />
+            ) : (
+              settings.site_name || 'BlogForge.'
+            )}
+          </Link>
           <nav className="hidden md:flex gap-8 font-mono text-sm uppercase tracking-widest">
             <Link to="/blog" className="text-foreground hover:text-accent transition-colors">Articles</Link>
 
@@ -52,7 +62,7 @@ export default function PublicHomePage() {
       <main className="flex-1 container mx-auto px-4 py-8 newsprint-texture">
         <section className="py-12 md:py-20 border-b-4 border-black mb-12">
           <h1 className="text-6xl sm:text-8xl lg:text-9xl font-black font-serif tracking-tighter mb-8 leading-[0.9] text-foreground text-justify uppercase">
-            The Complete CMS Solution.
+            {settings.site_tagline || 'The Complete CMS Solution.'}
           </h1>
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 border-t border-black pt-8">
             <div className="lg:col-span-8">
@@ -146,10 +156,10 @@ export default function PublicHomePage() {
       <footer className="border-t-4 border-black bg-background py-12 text-center text-foreground font-mono uppercase tracking-widest text-xs">
         <div className="container mx-auto px-4">
           <div className="mb-6 pb-6 border-b border-black inline-block px-12">
-            <span className="text-2xl font-serif font-black tracking-tighter">BLOGFORGE</span>
+            <span className="text-2xl font-serif font-black tracking-tighter">{(settings.site_name || 'BLOGFORGE').toUpperCase()}</span>
           </div>
-          <p className="mb-2">Edition: Vol 1.0 | Printed via React & Go</p>
-          <p className="text-muted-foreground">&copy; 2026 BlogForge. All rights reserved.</p>
+          <p className="mb-2">{settings.footer_text || 'Edition: Vol 1.0 | Printed via React & Go'}</p>
+          <p className="text-muted-foreground">&copy; {new Date().getFullYear()} {settings.site_name || 'BlogForge'}. All rights reserved.</p>
         </div>
       </footer>
     </div>

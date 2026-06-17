@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { apiClient } from '@/lib/api-client';
 import { updateMeta } from '@/lib/seo';
+import { useSiteSettings } from '@/contexts/SiteSettingsContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { format } from 'date-fns';
 import { formatDate } from '@/lib/date';
@@ -10,9 +11,12 @@ export default function BlogPage() {
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const { settings } = useSiteSettings();
+
   useEffect(() => {
-    updateMeta("The Archives — BlogForge", {
-      description: "Explore all articles, stories, and features from BlogForge.",
+    updateMeta(`The Archives — ${settings.site_name || 'BlogForge'}`, {
+      description: settings.seo_default_desc || "Explore all articles, stories, and features from BlogForge.",
+      image: settings.seo_default_ogimage
     });
     const fetchPosts = async () => {
       try {
@@ -41,7 +45,13 @@ export default function BlogPage() {
 
       <header className="border-b-2 border-black bg-background sticky top-0 z-40">
         <div className="container mx-auto px-4 h-20 flex items-center justify-between">
-          <Link to="/" className="text-3xl md:text-5xl font-black font-serif tracking-tighter uppercase text-foreground">BlogForge.</Link>
+          <Link to="/" className="text-3xl md:text-5xl font-black font-serif tracking-tighter uppercase text-foreground">
+            {settings.site_logo ? (
+              <img src={settings.site_logo} alt={settings.site_name || "BlogForge"} className="h-10 md:h-12 object-contain" />
+            ) : (
+              settings.site_name || 'BlogForge.'
+            )}
+          </Link>
           <nav className="hidden md:flex gap-8 font-mono text-sm uppercase tracking-widest">
             <Link to="/blog" className="text-accent transition-colors">Articles</Link>
 
@@ -98,10 +108,10 @@ export default function BlogPage() {
       <footer className="border-t-4 border-black bg-background py-12 text-center text-foreground font-mono uppercase tracking-widest text-xs">
         <div className="container mx-auto px-4">
           <div className="mb-6 pb-6 border-b border-black inline-block px-12">
-            <span className="text-2xl font-serif font-black tracking-tighter">BLOGFORGE</span>
+            <span className="text-2xl font-serif font-black tracking-tighter">{(settings.site_name || 'BLOGFORGE').toUpperCase()}</span>
           </div>
-          <p className="mb-2">Edition: Vol 1.0 | Printed via React & Go</p>
-          <p className="text-muted-foreground">&copy; 2026 BlogForge. All rights reserved.</p>
+          <p className="mb-2">{settings.footer_text || 'Edition: Vol 1.0 | Printed via React & Go'}</p>
+          <p className="text-muted-foreground">&copy; {new Date().getFullYear()} {settings.site_name || 'BlogForge'}. All rights reserved.</p>
         </div>
       </footer>
     </div>
