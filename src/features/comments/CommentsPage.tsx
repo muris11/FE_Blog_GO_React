@@ -3,6 +3,7 @@ import { apiClient } from '@/lib/api-client';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
+import { MessageSquare, RefreshCw } from 'lucide-react';
 
 export default function CommentsPage() {
   const [comments, setComments] = useState<any[]>([]);
@@ -15,19 +16,20 @@ export default function CommentsPage() {
   }, []);
 
   const fetchComments = async () => {
+    setLoading(true);
     setError('');
     try {
       const response = await apiClient.get('/admin/comments');
       setComments(response.data.data || []);
     } catch (error: any) {
-      setError(error.response?.data?.message || error.message || 'Error fetching comments');
+      const msg = error.response?.data?.message || error.message || 'Error fetching comments';
+      setError(msg);
     } finally {
       setLoading(false);
     }
   };
 
   const handleModerate = async (id: string, status: string) => {
-    setError('');
     try {
       await apiClient.patch(`/admin/comments/${id}/status`, { status });
       fetchComments();
@@ -38,7 +40,6 @@ export default function CommentsPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this comment?')) return;
-    setError('');
     try {
       await apiClient.delete(`/admin/comments/${id}`);
       fetchComments();
@@ -47,29 +48,38 @@ export default function CommentsPage() {
     }
   };
 
-  if (loading) return <div className="p-8 font-mono text-xs uppercase tracking-widest">Loading comments...</div>;
-
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-black font-serif uppercase tracking-tighter">Comments</h1>
-        <p className="text-muted-foreground font-mono text-sm uppercase tracking-widest mt-1">Moderate reader responses</p>
+      <div className="flex items-center justify-between border-b-2 border-black pb-4">
+        <div>
+          <h1 className="text-3xl font-black font-serif uppercase tracking-tighter">Comments</h1>
+          <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground mt-2">Moderate reader responses</p>
+        </div>
+        <Button variant="outline" size="sm" onClick={fetchComments} disabled={loading} className="sharp-corners font-mono text-xs uppercase tracking-widest">
+          <RefreshCw className={`mr-2 h-3 w-3 ${loading ? 'animate-spin' : ''}`} />
+          Refresh
+        </Button>
       </div>
 
       {error && (
-        <div className="text-sm text-red-600 bg-red-50 border-2 border-red-200 sharp-corners p-2 font-mono text-xs">
-          {error}
+        <div className="flex items-center justify-between text-sm text-red-600 bg-red-50 border-2 border-red-200 sharp-corners p-3 font-mono text-xs">
+          <span>{error}</span>
+          <Button variant="ghost" size="sm" onClick={fetchComments} className="sharp-corners text-red-600 hover:bg-red-100">
+            Retry
+          </Button>
         </div>
       )}
 
-      <div className="space-y-4">
-        {comments.length > 0 ? (
-          comments.map((comment) => (
+      {loading ? (
+        <div className="p-8 text-center font-mono text-xs uppercase tracking-widest text-muted-foreground">Loading comments...</div>
+      ) : comments.length > 0 ? (
+        <div className="space-y-4">
+          {comments.map((comment) => (
             <Card key={comment.id} className="sharp-corners border-black hover:bg-neutral-50 transition-colors">
               <CardContent className="p-6">
                 <div className="flex flex-col md:flex-row gap-6 justify-between items-start">
                   <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
+                    <div className="flex items-center gap-3 mb-2 flex-wrap">
                       <span className="font-bold font-mono text-sm uppercase tracking-widest">{comment.author_name}</span>
                       <span className="text-muted-foreground text-xs">{comment.author_email}</span>
                       <span className={`text-xs px-2 py-1 font-mono uppercase tracking-widest border border-black ${
@@ -82,32 +92,42 @@ export default function CommentsPage() {
                       </span>
                     </div>
                     <p className="text-sm text-muted-foreground mb-3 font-mono">
-                      On Post ID: {comment.post_id} • {format(new Date(comment.created_at), 'MMM d, yyyy HH:mm')}
+                      On Post ID: {comment.post_id.substring(0, 8)}... &middot; {format(new Date(comment.created_at), 'MMM d, yyyy HH:mm')}
                     </p>
                     <p className="font-body text-base">{comment.content}</p>
                   </div>
-                  <div className="flex gap-2 shrink-0">
+                  <div className="flex gap-2 shrink-0 flex-wrap">
                     {comment.status !== 'approved' && (
-                      <Button variant="outline" size="sm" onClick={() => handleModerate(comment.id, 'approved')} className="border-black rounded-none">Approve</Button>
+                      <Button variant="outline" size="sm" onClick={() => handleModerate(comment.id, 'approved')} className="border-black sharp-corners font-mono text-xs">
+                        Approve
+                      </Button>
                     )}
                     {comment.status !== 'rejected' && (
-                      <Button variant="outline" size="sm" onClick={() => handleModerate(comment.id, 'rejected')} className="border-black rounded-none">Reject</Button>
+                      <Button variant="outline" size="sm" onClick={() => handleModerate(comment.id, 'rejected')} className="border-black sharp-corners font-mono text-xs">
+                        Reject
+                      </Button>
                     )}
                     {comment.status !== 'spam' && (
-                      <Button variant="outline" size="sm" onClick={() => handleModerate(comment.id, 'spam')} className="border-black rounded-none">Spam</Button>
+                      <Button variant="outline" size="sm" onClick={() => handleModerate(comment.id, 'spam')} className="border-black sharp-corners font-mono text-xs">
+                        Spam
+                      </Button>
                     )}
-                    <Button variant="destructive" size="sm" onClick={() => handleDelete(comment.id)} className="rounded-none">Delete</Button>
+                    <Button variant="destructive" size="sm" onClick={() => handleDelete(comment.id)} className="sharp-corners font-mono text-xs">
+                      Delete
+                    </Button>
                   </div>
                 </div>
               </CardContent>
             </Card>
-          ))
-        ) : (
-          <div className="p-12 text-center border border-black bg-neutral-100 sharp-corners">
-            <p className="font-mono text-sm uppercase tracking-widest text-muted-foreground">No comments found.</p>
-          </div>
-        )}
-      </div>
+          ))}
+        </div>
+      ) : !error ? (
+        <div className="p-12 text-center border-2 border-black bg-neutral-100 sharp-corners">
+          <MessageSquare className="h-8 w-8 mx-auto mb-3 text-muted-foreground" />
+          <p className="font-mono text-sm uppercase tracking-widest text-muted-foreground">No comments found.</p>
+          <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground mt-2">Comments from readers will appear here.</p>
+        </div>
+      ) : null}
     </div>
   );
 }

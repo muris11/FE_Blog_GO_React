@@ -131,6 +131,32 @@ export default function ArticleDetailPage() {
                 </ReactMarkdown>
               </div>
               {post.allow_comments && <CommentSection postId={post.id} />}
+
+              {post.related_posts?.length > 0 && (
+                <div className="mt-16 border-t-4 border-black pt-10">
+                  <h2 className="text-3xl font-black font-serif uppercase tracking-tight mb-8">Related Articles</h2>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {post.related_posts.map((rp: any) => (
+                      <Link key={rp.id} to={`/blog/${rp.slug}`} className="group block border-2 border-black hover:bg-neutral-100 transition-colors">
+                        <div className="aspect-video border-b-2 border-black bg-[radial-gradient(#000_1px,transparent_1px)] bg-[size:16px_16px] overflow-hidden">
+                          {rp.cover_url ? (
+                            <img src={rp.cover_url} alt={rp.title} className="w-full h-full object-cover grayscale group-hover:sepia-[30%] transition-all duration-500" />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center font-mono text-xs uppercase tracking-widest">Fig 1. Image</div>
+                          )}
+                        </div>
+                        <div className="p-4">
+                          <p className="font-mono text-[10px] uppercase tracking-widest text-accent mb-2">{rp.category?.name}</p>
+                          <h3 className="font-serif font-black text-lg leading-tight group-hover:text-accent transition-colors">{rp.title}</h3>
+                          <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground mt-2">
+                            {format(new Date(rp.published_at || rp.created_at), 'MMM d, yyyy')}
+                          </p>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </article>

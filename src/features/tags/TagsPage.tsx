@@ -5,18 +5,17 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Tags, Hash, TrendingUp } from 'lucide-react';
 
 export default function TagsPage() {
   const [tags, setTags] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  
-  // Dialog state
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingTag, setEditingTag] = useState<any>(null);
   const [formData, setFormData] = useState({ name: '', slug: '', description: '' });
   const [editError, setEditError] = useState('');
-  
-  // Delete dialog state
+
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [tagToDelete, setTagToDelete] = useState<any>(null);
   const [deleteError, setDeleteError] = useState('');
@@ -82,6 +81,9 @@ export default function TagsPage() {
     }
   };
 
+  const totalPostCount = tags.reduce((sum: number, t: any) => sum + (t.post_count || 0), 0);
+  const mostUsedTag = tags.reduce((best: any, t: any) => (t.post_count || 0) > (best?.post_count || 0) ? t : best, null);
+
   if (loading) return <div className="p-8 font-mono text-xs uppercase tracking-widest">Loading tags...</div>;
 
   return (
@@ -96,13 +98,47 @@ export default function TagsPage() {
         </Button>
       </div>
 
-      <div className="border-2 border-black bg-white sharp-corners">
+      {/* Stats cards */}
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <div className="border-2 border-black bg-white sharp-corners p-4">
+          <div className="flex items-center gap-3">
+            <Tags className="h-5 w-5 text-accent" />
+            <div>
+              <p className="text-2xl font-black font-serif">{tags.length}</p>
+              <p className="font-mono text-[10px] uppercase tracking-widest font-bold">Total Tags</p>
+            </div>
+          </div>
+        </div>
+        <div className="border-2 border-black bg-white sharp-corners p-4">
+          <div className="flex items-center gap-3">
+            <Hash className="h-5 w-5 text-accent" />
+            <div>
+              <p className="text-2xl font-black font-serif">{totalPostCount}</p>
+              <p className="font-mono text-[10px] uppercase tracking-widest font-bold">Posts Tagged</p>
+            </div>
+          </div>
+        </div>
+        <div className="border-2 border-black bg-white sharp-corners p-4 col-span-2 md:col-span-1">
+          <div className="flex items-center gap-3">
+            <TrendingUp className="h-5 w-5 text-accent" />
+            <div className="min-w-0">
+              <p className="font-mono text-[10px] uppercase tracking-widest font-bold truncate">
+                {mostUsedTag ? `${mostUsedTag.name} (${mostUsedTag.post_count})` : '—'}
+              </p>
+              <p className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground">Most Used Tag</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="border-2 border-black bg-white sharp-corners overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow className="border-b-2 border-black bg-neutral-100">
               <TableHead className="font-mono text-xs font-bold uppercase tracking-widest text-black">Name</TableHead>
               <TableHead className="font-mono text-xs font-bold uppercase tracking-widest text-black">Slug</TableHead>
               <TableHead className="font-mono text-xs font-bold uppercase tracking-widest text-black">Description</TableHead>
+              <TableHead className="font-mono text-xs font-bold uppercase tracking-widest text-black text-center">Posts</TableHead>
               <TableHead className="text-right font-mono text-xs font-bold uppercase tracking-widest text-black">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -111,7 +147,12 @@ export default function TagsPage() {
               <TableRow key={tag.id} className="border-b border-black">
                 <TableCell className="font-bold">{tag.name}</TableCell>
                 <TableCell className="font-mono text-xs text-muted-foreground">{tag.slug}</TableCell>
-                <TableCell>{tag.description}</TableCell>
+                <TableCell className="max-w-[200px] truncate">{tag.description}</TableCell>
+                <TableCell className="text-center">
+                  <span className="font-mono text-xs border border-black px-2 py-0.5 bg-neutral-50">
+                    {tag.post_count || 0}
+                  </span>
+                </TableCell>
                 <TableCell className="text-right">
                   <Button variant="ghost" size="sm" onClick={() => handleOpenDialog(tag)} className="sharp-corners mr-2 font-mono text-xs uppercase tracking-widest hover:text-accent">Edit</Button>
                   <Button variant="ghost" size="sm" onClick={() => confirmDelete(tag)} className="sharp-corners font-mono text-xs uppercase tracking-widest text-red-600 hover:bg-red-50 hover:text-red-700">Delete</Button>
@@ -119,8 +160,8 @@ export default function TagsPage() {
               </TableRow>
             )) : (
               <TableRow>
-                <TableCell colSpan={4} className="text-center p-8 font-mono text-xs uppercase tracking-widest text-muted-foreground">
-                  No tags found.
+                <TableCell colSpan={5} className="text-center p-8 font-mono text-xs uppercase tracking-widest text-muted-foreground">
+                  No tags found. Create one to organize your content.
                 </TableCell>
               </TableRow>
             )}
@@ -128,7 +169,6 @@ export default function TagsPage() {
         </Table>
       </div>
 
-      {/* Create / Edit Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="sharp-corners border-2 border-black sm:max-w-[425px]">
           <DialogHeader className="border-b-2 border-black pb-4 mb-4">
@@ -186,7 +226,6 @@ export default function TagsPage() {
         </DialogContent>
       </Dialog>
 
-      {/* Delete Confirmation Dialog */}
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <DialogContent className="sharp-corners border-2 border-black sm:max-w-[425px]">
           <DialogHeader className="border-b-2 border-black pb-4 mb-4">

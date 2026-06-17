@@ -6,8 +6,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, Save, Send, Image as ImageIcon } from 'lucide-react';
+import { ArrowLeft, Save, Send, Image as ImageIcon, Eye, Edit3 } from 'lucide-react';
 import { MediaSelector } from '@/components/MediaSelector';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 export default function PostFormPage() {
   const { id } = useParams<{ id: string }>();
@@ -17,6 +19,7 @@ export default function PostFormPage() {
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<any[]>([]);
   const [error, setError] = useState('');
+  const [showPreview, setShowPreview] = useState(false);
   
   const [formData, setFormData] = useState({
     title: '',
@@ -173,19 +176,33 @@ export default function PostFormPage() {
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <Label htmlFor="content">Content (Markdown) *</Label>
-              <Button type="button" variant="outline" size="sm" onClick={() => openSelector('insert')} className="sharp-corners h-7 text-xs font-mono uppercase tracking-widest">
-                <ImageIcon className="mr-2 h-3 w-3" /> Insert Media
-              </Button>
+              <div className="flex items-center gap-2">
+                <Button type="button" variant="outline" size="sm" onClick={() => openSelector('insert')} className="sharp-corners h-7 text-xs font-mono uppercase tracking-widest">
+                  <ImageIcon className="mr-2 h-3 w-3" /> Insert Media
+                </Button>
+                <Button type="button" variant={showPreview ? "default" : "outline"} size="sm" onClick={() => setShowPreview(!showPreview)} className="sharp-corners h-7 text-xs font-mono uppercase tracking-widest">
+                  {showPreview ? <Edit3 className="mr-2 h-3 w-3" /> : <Eye className="mr-2 h-3 w-3" />}
+                  {showPreview ? 'Edit' : 'Preview'}
+                </Button>
+              </div>
             </div>
-            <Textarea 
-              id="content" 
-              name="content" 
-              value={formData.content} 
-              onChange={handleChange} 
-              placeholder="Write your article here..." 
-              required 
-              className="min-h-[400px] font-mono text-sm"
-            />
+            {showPreview ? (
+              <div className="min-h-[400px] border-2 border-black p-4 bg-white overflow-y-auto prose prose-sm prose-slate max-w-none prose-headings:font-serif prose-a:text-accent prose-img:border prose-img:border-black prose-img:max-h-96 prose-img:mx-auto">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {formData.content || '*Start writing to see preview...*'}
+                </ReactMarkdown>
+              </div>
+            ) : (
+              <Textarea 
+                id="content" 
+                name="content" 
+                value={formData.content} 
+                onChange={handleChange} 
+                placeholder="Write your article here..." 
+                required 
+                className="min-h-[400px] font-mono text-sm"
+              />
+            )}
           </div>
 
           <div className="space-y-2">
@@ -237,7 +254,7 @@ export default function PostFormPage() {
               <Label>Cover Image</Label>
               {coverUrl ? (
                 <div className="relative border-2 border-black group">
-                  <img src={coverUrl} alt="Cover Preview" className="w-full aspect-video object-cover" />
+                  <img src={coverUrl} alt="Cover Preview" className="w-full aspect-video object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} />
                   <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                     <Button type="button" variant="outline" size="sm" onClick={() => openSelector('cover')} className="sharp-corners">
                       Change
