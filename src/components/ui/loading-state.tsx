@@ -1,6 +1,6 @@
 export default function LoadingState({ message = "Fetching data..." }: { message?: string }) {
   return (
-    <div className="min-h-[50vh] w-full flex flex-col items-center justify-center p-8 bg-background">
+    <div className="flex-1 w-full flex flex-col items-center justify-center p-8 bg-background">
       <div className="flex flex-col items-center space-y-6">
         {/* Brutalist Spinner */}
         <div className="relative w-16 h-16">
