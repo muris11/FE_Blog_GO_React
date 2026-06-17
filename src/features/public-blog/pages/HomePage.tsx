@@ -71,16 +71,26 @@ export default function PublicHomePage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 border-t border-black pt-8">
             <div className="lg:col-span-8">
               <p className="text-lg md:text-xl font-body leading-relaxed text-foreground text-justify">
-                <span className="float-left text-6xl md:text-7xl font-serif font-black leading-none pr-3 pt-1 text-accent">A</span>
-                modern, clean, and blazingly fast content management system built with Go and React. Embracing the stark contrast and irrefutable clarity of classic print journalism.
+                <span className="float-left text-6xl md:text-7xl font-serif font-black leading-none pr-3 pt-1 text-accent">
+                  {(settings.site_description ? settings.site_description.charAt(0) : 'A').toUpperCase()}
+                </span>
+                {settings.site_description ? settings.site_description.slice(1) : 'modern, clean, and blazingly fast content management system built with Go and React. Embracing the stark contrast and irrefutable clarity of classic print journalism.'}
               </p>
             </div>
             <div className="lg:col-span-4 border-l-0 lg:border-l border-black lg:pl-8 font-mono text-sm uppercase tracking-widest">
               <div className="mb-4 text-muted-foreground border-b border-black pb-2">Headlines</div>
               <ul className="space-y-4">
-                <li><span className="text-accent font-bold">●</span> High Information Density</li>
-                <li><span className="text-accent font-bold">●</span> Unwavering Clarity</li>
-                <li><span className="text-accent font-bold">●</span> Minimalist Aesthetic</li>
+                {(settings.site_features && settings.site_features.length > 0) ? (
+                  settings.site_features.map((feature: string, idx: number) => (
+                    <li key={idx}><span className="text-accent font-bold">●</span> {feature}</li>
+                  ))
+                ) : (
+                  <>
+                    <li><span className="text-accent font-bold">●</span> High Information Density</li>
+                    <li><span className="text-accent font-bold">●</span> Unwavering Clarity</li>
+                    <li><span className="text-accent font-bold">●</span> Minimalist Aesthetic</li>
+                  </>
+                )}
               </ul>
             </div>
           </div>

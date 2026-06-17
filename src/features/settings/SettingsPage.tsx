@@ -95,6 +95,30 @@ export default function SettingsPage() {
                 className="sharp-corners border-2 border-black"
               />
             </div>
+            <div className="space-y-2 md:col-span-2">
+              <Label className="font-mono text-xs font-bold uppercase tracking-widest">Site Description (Paragraph)</Label>
+              <textarea 
+                value={settings.site_description || ''} 
+                onChange={(e) => handleChange('site_description', e.target.value)} 
+                className="flex min-h-[80px] w-full sharp-corners border-2 border-black bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                rows={4}
+                placeholder="A modern, clean, and blazingly fast content management system..."
+              />
+            </div>
+            <div className="space-y-2 md:col-span-2">
+              <Label className="font-mono text-xs font-bold uppercase tracking-widest">Headlines (Features)</Label>
+              <p className="text-[10px] text-muted-foreground uppercase font-mono mb-2">Separate each feature with a comma (,)</p>
+              <Input 
+                value={Array.isArray(settings.site_features) ? settings.site_features.join(', ') : ''} 
+                onChange={(e) => {
+                  const val = e.target.value;
+                  const arr = val.split(',').map(s => s.trim()).filter(s => s !== '');
+                  handleChange('site_features', arr);
+                }} 
+                placeholder="High Information Density, Unwavering Clarity, Minimalist Aesthetic"
+                className="sharp-corners border-2 border-black"
+              />
+            </div>
             <div className="space-y-2">
               <Label className="font-mono text-xs font-bold uppercase tracking-widest">Logo</Label>
               <div className="flex items-center gap-4">

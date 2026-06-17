@@ -4,6 +4,8 @@ import { apiClient } from '@/lib/api-client';
 interface SiteSettings {
   site_name?: string;
   site_tagline?: string;
+  site_description?: string;
+  site_features?: string[];
   site_logo?: string;
   site_favicon?: string;
   seo_default_title?: string;
