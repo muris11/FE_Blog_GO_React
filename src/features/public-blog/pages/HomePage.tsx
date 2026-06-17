@@ -96,9 +96,9 @@ export default function PublicHomePage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {data.latest_posts.map((post: any) => (
                 <Card key={post.id} className="overflow-hidden flex flex-col hard-shadow-hover hover:bg-neutral-100 group">
-                  <div className="aspect-video border-b border-black relative bg-[radial-gradient(#000_1px,transparent_1px)] bg-[size:16px_16px] opacity-90 group-hover:opacity-100 transition-opacity">
+                  <div className="aspect-video border-b border-black relative bg-[radial-gradient(#000_1px,transparent_1px)] bg-[size:16px_16px] opacity-90 group-hover:opacity-100 transition-opacity bg-white">
                     {post.cover_url ? (
-                      <img src={post.cover_url} alt={post.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                      <img src={post.cover_url} alt={post.title} className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105 p-2" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center font-mono text-xs uppercase tracking-widest">Fig 1. Image Unavailable</div>
                     )}

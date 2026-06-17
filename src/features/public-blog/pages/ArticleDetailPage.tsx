@@ -158,8 +158,8 @@ export default function ArticleDetailPage() {
             <div className="lg:col-span-9 p-8 md:p-12">
               {post.cover_url && (
                 <figure className="mb-12 border-b-2 border-black pb-4 relative">
-                  <div className="aspect-video bg-[radial-gradient(#000_1px,transparent_1px)] bg-[size:16px_16px] p-2 border border-black mb-4">
-                    <img src={post.cover_url} alt={post.title} className="w-full h-full object-cover" />
+                  <div className="w-full bg-[radial-gradient(#000_1px,transparent_1px)] bg-[size:16px_16px] p-2 border border-black mb-4 flex justify-center">
+                    <img src={post.cover_url} alt={post.title} className="max-w-full max-h-[70vh] object-contain" />
                   </div>
                   <figcaption className="text-right font-mono text-xs uppercase tracking-widest text-muted-foreground">
                     Fig 1. {post.title}
