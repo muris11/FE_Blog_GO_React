@@ -104,7 +104,11 @@ export default function PostsPage() {
                   <TableCell>{post.category?.name}</TableCell>
                   <TableCell>{post.author?.name}</TableCell>
                   <TableCell>
-                    {formatDate(post.published_at, 'MMM d, yyyy')}
+                    {post.status === 'published'
+                      ? (formatDate(post.published_at, 'MMM d, yyyy') !== '-' 
+                        ? formatDate(post.published_at, 'MMM d, yyyy') 
+                        : formatDate(post.created_at, 'MMM d, yyyy'))
+                      : '-'}
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">

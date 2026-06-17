@@ -130,7 +130,7 @@ export default function BlogPage() {
           <div className="mb-6 pb-6 border-b border-black inline-block px-12">
             <span className="text-2xl font-serif font-black tracking-tighter">{(settings.site_name || 'BLOGFORGE').toUpperCase()}</span>
           </div>
-          <p className="mb-4">{settings.footer_text || 'Edition: Vol 1.0 | Printed via React & Go'}</p>
+          <p className="mb-4">{settings.footer_text || 'Where clarity meets conviction.'}</p>
           
           {(settings.contact_email || (settings.social_links && settings.social_links.length > 0)) && (
             <div className="flex flex-wrap items-center justify-center gap-4 mb-6">

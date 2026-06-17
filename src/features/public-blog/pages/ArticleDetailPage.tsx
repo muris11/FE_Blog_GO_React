@@ -109,21 +109,21 @@ export default function ArticleDetailPage() {
 
       <main className="flex-1 container mx-auto px-4 py-8 newsprint-texture">
         <article className="border-x border-black max-w-5xl mx-auto bg-background">
-          <header className="border-b-4 border-black p-8 md:p-12 text-center">
+          <header className="border-b-4 border-black p-6 md:p-10 lg:p-12 text-center">
             <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
-              <div className="border border-black bg-black text-white px-4 py-1 font-mono text-xs uppercase tracking-widest">
+              <div className="border border-black bg-black text-white px-3 py-1 font-mono text-xs uppercase tracking-widest">
                 {post.category?.name}
               </div>
               {post.tags && post.tags.map((tag: any) => (
-                <div key={tag.id} className="border border-black px-3 py-1 font-mono text-xs uppercase tracking-widest text-accent">
+                <div key={tag.id} className="border border-black px-2 py-1 font-mono text-xs uppercase tracking-widest text-accent">
                   {tag.name}
                 </div>
               ))}
             </div>
-            <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black font-serif tracking-tighter mb-6 md:mb-8 leading-[0.9] text-foreground uppercase break-words hyphens-auto">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-black font-serif tracking-tighter mb-4 md:mb-6 leading-[1.15] text-foreground uppercase break-words hyphens-auto max-w-4xl mx-auto">
               {post.title}
             </h1>
-            <p className="text-lg md:text-xl font-body leading-relaxed text-foreground max-w-3xl mx-auto italic mb-8 md:mb-10">
+            <p className="text-sm sm:text-base md:text-lg font-body leading-relaxed text-foreground/90 max-w-3xl mx-auto italic mb-6 md:mb-8">
               {post.excerpt}
             </p>
             <div className="flex flex-col md:flex-row items-center justify-center gap-4 text-xs font-mono uppercase tracking-widest border-y border-black py-4">
@@ -139,85 +139,73 @@ export default function ArticleDetailPage() {
             </div>
           </header>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12">
-            {/* Left Sidebar (Meta/Tags) */}
-            <div className="lg:col-span-3 border-b lg:border-b-0 lg:border-r border-black p-8">
-               <div className="font-mono text-sm uppercase tracking-widest text-muted-foreground mb-4 border-b border-black pb-2">Article Index</div>
-              <div className="text-xs font-mono uppercase tracking-widest border border-black p-4 text-center">
-                <span className="block text-accent font-bold mb-1">Edition</span>
-                Vol 1.0 - NYC
+          <div className="max-w-4xl mx-auto p-4 sm:p-6 md:p-8 lg:p-10">
+            {post.cover_url && (
+              <figure className="mb-8 md:mb-12 border-b-2 border-black pb-4 relative">
+                <div className="aspect-video bg-[radial-gradient(#000_1px,transparent_1px)] bg-[size:16px_16px] p-1 md:p-2 border border-black mb-4">
+                  <img src={post.cover_url} alt={post.title} className="w-full h-full object-cover" />
+                </div>
+                <figcaption className="text-right font-mono text-[10px] md:text-xs uppercase tracking-widest text-muted-foreground">
+                  Fig 1. {post.title}
+                </figcaption>
+              </figure>
+            )}
+
+            <div className="prose prose-base sm:prose-lg prose-slate max-w-none font-body text-justify leading-relaxed prose-headings:font-serif prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tight prose-img:border-2 prose-img:border-black prose-img:p-1 prose-img:bg-neutral-100 prose-a:text-accent prose-a:underline-offset-4 prose-a:decoration-2 hover:prose-a:bg-accent hover:prose-a:text-white [&>p:first-of-type]:first-letter:float-left [&>p:first-of-type]:first-letter:text-5xl md:[&>p:first-of-type]:first-letter:text-6xl [&>p:first-of-type]:first-letter:font-serif [&>p:first-of-type]:first-letter:font-black [&>p:first-of-type]:first-letter:text-accent [&>p:first-of-type]:first-letter:pr-3 [&>p:first-of-type]:first-letter:leading-none [&>p:first-of-type]:first-letter:mt-2">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {post.content}
+              </ReactMarkdown>
+            </div>
+
+            {/* Share Section */}
+            <div className="mt-12 py-6 border-y-2 border-black flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-2 font-mono text-sm uppercase tracking-widest font-bold">
+                <Share2 className="h-4 w-4" />
+                <span>Share Article</span>
+              </div>
+              <div className="flex gap-2">
+                <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareTitle)}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 border-2 border-black hover:bg-black hover:text-white transition-colors" aria-label="Share on X">
+                  <TwitterIcon />
+                </a>
+                <a href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(shareTitle)}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 border-2 border-black hover:bg-black hover:text-white transition-colors" aria-label="Share on LinkedIn">
+                  <LinkedinIcon />
+                </a>
+                <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 border-2 border-black hover:bg-black hover:text-white transition-colors" aria-label="Share on Facebook">
+                  <FacebookIcon />
+                </a>
+                <button onClick={copyToClipboard} className="flex items-center justify-center w-10 h-10 border-2 border-black hover:bg-black hover:text-white transition-colors" aria-label="Copy link">
+                  {copied ? <Check className="h-4 w-4 text-green-500" /> : <LinkIcon className="h-4 w-4" />}
+                </button>
               </div>
             </div>
 
-            {/* Main Content */}
-            <div className="lg:col-span-9 p-8 md:p-12">
-              {post.cover_url && (
-                <figure className="mb-8 md:mb-12 border-b-2 border-black pb-4 relative">
-                  <div className="aspect-video bg-[radial-gradient(#000_1px,transparent_1px)] bg-[size:16px_16px] p-1 md:p-2 border border-black mb-4">
-                    <img src={post.cover_url} alt={post.title} className="w-full h-full object-cover" />
-                  </div>
-                  <figcaption className="text-right font-mono text-[10px] md:text-xs uppercase tracking-widest text-muted-foreground">
-                    Fig 1. {post.title}
-                  </figcaption>
-                </figure>
-              )}
+            {post.allow_comments && <CommentSection postId={post.id} />}
 
-              <div className="prose prose-lg prose-slate max-w-none font-body text-justify leading-relaxed prose-headings:font-serif prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tight prose-img:border-2 prose-img:border-black prose-img:p-1 prose-img:bg-neutral-100 prose-a:text-accent prose-a:underline-offset-4 prose-a:decoration-2 hover:prose-a:bg-accent hover:prose-a:text-white [&>p:first-of-type]:first-letter:float-left [&>p:first-of-type]:first-letter:text-7xl [&>p:first-of-type]:first-letter:font-serif [&>p:first-of-type]:first-letter:font-black [&>p:first-of-type]:first-letter:text-accent [&>p:first-of-type]:first-letter:pr-3 [&>p:first-of-type]:first-letter:leading-none [&>p:first-of-type]:first-letter:mt-2">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                  {post.content}
-                </ReactMarkdown>
-              </div>
-
-              {/* Share Section */}
-              <div className="mt-12 py-6 border-y-2 border-black flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div className="flex items-center gap-2 font-mono text-sm uppercase tracking-widest font-bold">
-                  <Share2 className="h-4 w-4" />
-                  <span>Share Article</span>
-                </div>
-                <div className="flex gap-2">
-                  <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareTitle)}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 border-2 border-black hover:bg-black hover:text-white transition-colors" aria-label="Share on X">
-                    <TwitterIcon />
-                  </a>
-                  <a href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(shareTitle)}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 border-2 border-black hover:bg-black hover:text-white transition-colors" aria-label="Share on LinkedIn">
-                    <LinkedinIcon />
-                  </a>
-                  <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 border-2 border-black hover:bg-black hover:text-white transition-colors" aria-label="Share on Facebook">
-                    <FacebookIcon />
-                  </a>
-                  <button onClick={copyToClipboard} className="flex items-center justify-center w-10 h-10 border-2 border-black hover:bg-black hover:text-white transition-colors" aria-label="Copy link">
-                    {copied ? <Check className="h-4 w-4 text-green-500" /> : <LinkIcon className="h-4 w-4" />}
-                  </button>
+            {post.related_posts?.length > 0 && (
+              <div className="mt-16 border-t-4 border-black pt-10">
+                <h2 className="text-3xl font-black font-serif uppercase tracking-tight mb-8">Related Articles</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {post.related_posts.map((rp: any) => (
+                    <Link key={rp.id} to={`/blog/${rp.slug}`} className="group block border-2 border-black hover:bg-neutral-100 transition-colors">
+                      <div className="aspect-video border-b-2 border-black bg-[radial-gradient(#000_1px,transparent_1px)] bg-[size:16px_16px] overflow-hidden">
+                        {rp.cover_url ? (
+                          <img src={rp.cover_url} alt={rp.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center font-mono text-xs uppercase tracking-widest">Fig 1. Image</div>
+                        )}
+                      </div>
+                      <div className="p-4">
+                        <p className="font-mono text-[10px] uppercase tracking-widest text-accent mb-2">{rp.category?.name}</p>
+                        <h3 className="font-serif font-black text-lg leading-tight group-hover:text-accent transition-colors">{rp.title}</h3>
+                        <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground mt-2">
+                          {formatDate(rp.published_at || rp.created_at, 'MMM d, yyyy')}
+                        </p>
+                      </div>
+                    </Link>
+                  ))}
                 </div>
               </div>
-
-              {post.allow_comments && <CommentSection postId={post.id} />}
-
-              {post.related_posts?.length > 0 && (
-                <div className="mt-16 border-t-4 border-black pt-10">
-                  <h2 className="text-3xl font-black font-serif uppercase tracking-tight mb-8">Related Articles</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {post.related_posts.map((rp: any) => (
-                      <Link key={rp.id} to={`/blog/${rp.slug}`} className="group block border-2 border-black hover:bg-neutral-100 transition-colors">
-                        <div className="aspect-video border-b-2 border-black bg-[radial-gradient(#000_1px,transparent_1px)] bg-[size:16px_16px] overflow-hidden">
-                          {rp.cover_url ? (
-                            <img src={rp.cover_url} alt={rp.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center font-mono text-xs uppercase tracking-widest">Fig 1. Image</div>
-                          )}
-                        </div>
-                        <div className="p-4">
-                          <p className="font-mono text-[10px] uppercase tracking-widest text-accent mb-2">{rp.category?.name}</p>
-                          <h3 className="font-serif font-black text-lg leading-tight group-hover:text-accent transition-colors">{rp.title}</h3>
-                          <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground mt-2">
-                            {formatDate(rp.published_at || rp.created_at, 'MMM d, yyyy')}
-                          </p>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
+            )}
           </div>
         </article>
       </main>
@@ -227,7 +215,7 @@ export default function ArticleDetailPage() {
           <div className="mb-6 pb-6 border-b border-black inline-block px-12">
             <span className="text-2xl font-serif font-black tracking-tighter">{(settings.site_name || 'BLOGFORGE').toUpperCase()}</span>
           </div>
-          <p className="mb-4">{settings.footer_text || 'Edition: Vol 1.0 | Printed via React & Go'}</p>
+          <p className="mb-4">{settings.footer_text || 'Where clarity meets conviction.'}</p>
           
           {(settings.contact_email || (settings.social_links && settings.social_links.length > 0)) && (
             <div className="flex flex-wrap items-center justify-center gap-4 mb-6">

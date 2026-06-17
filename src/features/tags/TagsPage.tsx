@@ -236,8 +236,13 @@ export default function TagsPage() {
               This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
-          <div className="py-4">
-            Are you sure you want to delete the tag <span className="font-bold">{tagToDelete?.name}</span>?
+          <div className="py-4 space-y-2">
+            <p>Are you sure you want to delete the tag <span className="font-bold">{tagToDelete?.name}</span>?</p>
+            {tagToDelete && tagToDelete.post_count > 0 && (
+              <p className="text-red-600 bg-red-50 border border-red-200 p-2 font-mono text-xs">
+                Warning: This tag is used in <strong>{tagToDelete.post_count}</strong> post(s). Deleting it will remove the association.
+              </p>
+            )}
           </div>
           {deleteError && (
             <div className="px-4 pb-2 text-sm text-red-600 bg-red-50 border-2 border-red-200 sharp-corners p-2 font-mono text-xs">

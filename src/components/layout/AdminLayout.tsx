@@ -1,15 +1,21 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuthStore } from '@/features/auth/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { useLogout } from '@/features/auth/api/authApi';
+import { useSiteSettings } from '@/contexts/SiteSettingsContext';
 import { LogOut, Home, FileText, Settings, LayoutDashboard, Tags, FolderTree, Image, Users, MessageSquare, Activity, Menu, X } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
 export default function AdminLayout() {
   const { isAuthenticated, user } = useAuthStore();
+  const { settings } = useSiteSettings();
   const logout = useLogout();
   const location = useLocation();
+
+  useEffect(() => {
+    document.title = `Admin — ${settings.site_name || 'BlogForge'}`;
+  }, [settings.site_name]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   if (!isAuthenticated) {
@@ -105,7 +111,7 @@ export default function AdminLayout() {
             <Menu className="h-5 w-5" />
           </button>
           <div className="text-xs font-mono uppercase tracking-widest text-muted-foreground hidden sm:block">
-            Edition: Vol 1.0 | Admin Access
+            Content Management
           </div>
           <div className="flex items-center gap-4 ml-auto">
             <Button variant="outline" size="sm" asChild className="border-2 border-black sharp-corners">
