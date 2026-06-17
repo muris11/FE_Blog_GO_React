@@ -42,7 +42,7 @@ export default function SettingsPage() {
     }
   };
 
-  const handleChange = (key: string, value: string) => {
+  const handleChange = (key: string, value: any) => {
     setSettings(prev => ({ ...prev, [key]: value }));
   };
 
