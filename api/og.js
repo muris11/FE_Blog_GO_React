@@ -11,7 +11,7 @@ export default async function handler(req, res) {
 
     // If there's a slug, fetch post details from backend
     if (slug) {
-      const backendUrl = 'https://muris11-bloggerforce.hf.space/api/v1/public/posts/' + slug;
+      const backendUrl = process.env.VITE_API_BASE_URL + '/public/posts/' + slug;
       const apiResponse = await fetch(backendUrl);
       if (apiResponse.ok) {
         const data = await apiResponse.json();
