@@ -59,7 +59,7 @@ export default function TagsPage() {
       setIsDialogOpen(false);
       fetchTags();
     } catch (error: any) {
-      setEditError(error.response?.data?.message || error.message || 'Error saving tag');
+      setEditError(error.response?.data?.errors || error.response?.data?.message || error.message || 'Error saving tag');
     }
   };
 
