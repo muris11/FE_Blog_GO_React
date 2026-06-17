@@ -18,6 +18,7 @@ export default function PostFormPage() {
   
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<any[]>([]);
+  const [availableTags, setAvailableTags] = useState<any[]>([]);
   const [error, setError] = useState('');
   const [showPreview, setShowPreview] = useState(false);
   
@@ -55,11 +56,12 @@ export default function PostFormPage() {
     document.title = isEditing ? "Edit Post | BlogForge Admin" : "Create Post | BlogForge Admin";
     const fetchData = async () => {
       try {
-        const [catRes] = await Promise.all([
+        const [catRes, tagRes] = await Promise.all([
           apiClient.get('/admin/categories'),
-          apiClient.get('/admin/tags') // Kept for future use
+          apiClient.get('/admin/tags')
         ]);
         setCategories(catRes.data.data || []);
+        setAvailableTags(tagRes.data.data || []);
 
         if (isEditing) {
           const postRes = await apiClient.get(`/admin/posts/${id}`);
@@ -248,6 +250,39 @@ export default function PostFormPage() {
                   ))}
                 </SelectContent>
               </Select>
+            </div>
+
+            <div className="space-y-3">
+              <Label>Tags</Label>
+              <div className="flex flex-wrap gap-2 max-h-48 overflow-y-auto p-3 border border-black bg-neutral-50 sharp-corners">
+                {availableTags.length === 0 ? (
+                  <p className="text-xs text-muted-foreground font-mono">No tags available.</p>
+                ) : (
+                  availableTags.map(tag => {
+                    const isSelected = formData.tags.includes(tag.id);
+                    return (
+                      <button
+                        key={tag.id}
+                        type="button"
+                        onClick={() => {
+                          if (isSelected) {
+                            setFormData(prev => ({ ...prev, tags: prev.tags.filter(id => id !== tag.id) }));
+                          } else {
+                            setFormData(prev => ({ ...prev, tags: [...prev.tags, tag.id] }));
+                          }
+                        }}
+                        className={`text-xs px-2 py-1 border sharp-corners font-mono transition-colors ${
+                          isSelected 
+                            ? 'bg-black text-white border-black' 
+                            : 'bg-white text-black border-black hover:bg-neutral-200'
+                        }`}
+                      >
+                        {tag.name}
+                      </button>
+                    );
+                  })
+                )}
+              </div>
             </div>
             
             <div className="space-y-2">
