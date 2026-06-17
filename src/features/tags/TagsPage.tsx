@@ -14,10 +14,12 @@ export default function TagsPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingTag, setEditingTag] = useState<any>(null);
   const [formData, setFormData] = useState({ name: '', slug: '', description: '' });
+  const [editError, setEditError] = useState('');
   
   // Delete dialog state
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [tagToDelete, setTagToDelete] = useState<any>(null);
+  const [deleteError, setDeleteError] = useState('');
 
   useEffect(() => {
     document.title = "Tags | BlogForge Admin";
@@ -48,6 +50,7 @@ export default function TagsPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setEditError('');
     try {
       if (editingTag) {
         await apiClient.put(`/admin/tags/${editingTag.id}`, formData);
@@ -56,24 +59,26 @@ export default function TagsPage() {
       }
       setIsDialogOpen(false);
       fetchTags();
-    } catch (error) {
-      console.error('Error saving tag', error);
+    } catch (error: any) {
+      setEditError(error.response?.data?.message || error.message || 'Error saving tag');
     }
   };
 
   const confirmDelete = (tag: any) => {
     setTagToDelete(tag);
+    setDeleteError('');
     setIsDeleteDialogOpen(true);
   };
 
   const handleDelete = async () => {
     if (!tagToDelete) return;
+    setDeleteError('');
     try {
       await apiClient.delete(`/admin/tags/${tagToDelete.id}`);
       setIsDeleteDialogOpen(false);
       fetchTags();
-    } catch (error) {
-      console.error('Error deleting tag', error);
+    } catch (error: any) {
+      setDeleteError(error.response?.data?.message || error.message || 'Error deleting tag');
     }
   };
 
@@ -132,6 +137,11 @@ export default function TagsPage() {
             </DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
+            {editError && (
+              <div className="text-sm text-red-600 bg-red-50 border-2 border-red-200 sharp-corners p-2 font-mono text-xs">
+                {editError}
+              </div>
+            )}
             <div className="space-y-2">
               <Label htmlFor="name" className="font-mono text-xs font-bold uppercase tracking-widest">Name</Label>
               <Input 
@@ -190,6 +200,11 @@ export default function TagsPage() {
           <div className="py-4">
             Are you sure you want to delete the tag <span className="font-bold">{tagToDelete?.name}</span>?
           </div>
+          {deleteError && (
+            <div className="px-4 pb-2 text-sm text-red-600 bg-red-50 border-2 border-red-200 sharp-corners p-2 font-mono text-xs">
+              {deleteError}
+            </div>
+          )}
           <DialogFooter className="pt-4 border-t-2 border-black mt-6">
             <Button type="button" variant="outline" onClick={() => setIsDeleteDialogOpen(false)} className="sharp-corners">
               Cancel

@@ -17,10 +17,12 @@ export default function CategoriesPage() {
   const [formData, setFormData] = useState({ 
     name: '', slug: '', description: '', is_active: true 
   });
+  const [editError, setEditError] = useState('');
   
   // Delete dialog state
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState<any>(null);
+  const [deleteError, setDeleteError] = useState('');
 
   useEffect(() => {
     document.title = "Categories | BlogForge Admin";
@@ -56,6 +58,7 @@ export default function CategoriesPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setEditError('');
     try {
       if (editingCategory) {
         await apiClient.put(`/admin/categories/${editingCategory.id}`, formData);
@@ -64,24 +67,26 @@ export default function CategoriesPage() {
       }
       setIsDialogOpen(false);
       fetchCategories();
-    } catch (error) {
-      console.error('Error saving category', error);
+    } catch (error: any) {
+      setEditError(error.response?.data?.message || error.message || 'Error saving category');
     }
   };
 
   const confirmDelete = (category: any) => {
     setCategoryToDelete(category);
+    setDeleteError('');
     setIsDeleteDialogOpen(true);
   };
 
   const handleDelete = async () => {
     if (!categoryToDelete) return;
+    setDeleteError('');
     try {
       await apiClient.delete(`/admin/categories/${categoryToDelete.id}`);
       setIsDeleteDialogOpen(false);
       fetchCategories();
-    } catch (error) {
-      console.error('Error deleting category', error);
+    } catch (error: any) {
+      setDeleteError(error.response?.data?.message || error.message || 'Error deleting category');
     }
   };
 
@@ -145,6 +150,11 @@ export default function CategoriesPage() {
             </DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
+            {editError && (
+              <div className="text-sm text-red-600 bg-red-50 border-2 border-red-200 sharp-corners p-2 font-mono text-xs">
+                {editError}
+              </div>
+            )}
             <div className="space-y-2">
               <Label htmlFor="name" className="font-mono text-xs font-bold uppercase tracking-widest">Name</Label>
               <Input 
@@ -215,6 +225,11 @@ export default function CategoriesPage() {
           <div className="py-4">
             Are you sure you want to delete category <span className="font-bold">{categoryToDelete?.name}</span>?
           </div>
+          {deleteError && (
+            <div className="px-4 pb-2 text-sm text-red-600 bg-red-50 border-2 border-red-200 sharp-corners p-2 font-mono text-xs">
+              {deleteError}
+            </div>
+          )}
           <DialogFooter className="pt-4 border-t-2 border-black mt-6">
             <Button type="button" variant="outline" onClick={() => setIsDeleteDialogOpen(false)} className="sharp-corners">
               Cancel

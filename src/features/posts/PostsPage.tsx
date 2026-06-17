@@ -12,6 +12,7 @@ export default function PostsPage() {
   const { user } = useAuthStore();
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deleteError, setDeleteError] = useState('');
 
   useEffect(() => {
     document.title = "Posts | BlogForge Admin";
@@ -31,11 +32,12 @@ export default function PostsPage() {
 
   const deletePost = async (id: string) => {
     if (confirm('Are you sure you want to delete this post?')) {
+      setDeleteError('');
       try {
         await apiClient.delete(`/admin/posts/${id}`);
         fetchPosts();
-      } catch (error) {
-        console.error('Error deleting post', error);
+      } catch (error: any) {
+        setDeleteError(error.response?.data?.message || error.message || 'Error deleting post');
       }
     }
   };
@@ -50,7 +52,7 @@ export default function PostsPage() {
     }
   };
 
-  if (loading) return <div>Loading posts...</div>;
+  if (loading) return <div className="p-8 font-mono text-xs uppercase tracking-widest">Loading posts...</div>;
 
   return (
     <div className="space-y-6">
@@ -65,6 +67,12 @@ export default function PostsPage() {
           </Link>
         </Button>
       </div>
+
+      {deleteError && (
+        <div className="text-sm text-red-600 bg-red-50 border-2 border-red-200 sharp-corners p-2 font-mono text-xs">
+          {deleteError}
+        </div>
+      )}
 
       <div className="border rounded-md bg-white">
         <Table>

@@ -7,6 +7,7 @@ import { format } from 'date-fns';
 export default function CommentsPage() {
   const [comments, setComments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     document.title = 'Comments | BlogForge Admin';
@@ -14,38 +15,39 @@ export default function CommentsPage() {
   }, []);
 
   const fetchComments = async () => {
+    setError('');
     try {
       const response = await apiClient.get('/admin/comments');
       setComments(response.data.data || []);
-    } catch (error) {
-      console.error('Error fetching comments', error);
+    } catch (error: any) {
+      setError(error.response?.data?.message || error.message || 'Error fetching comments');
     } finally {
       setLoading(false);
     }
   };
 
   const handleModerate = async (id: string, status: string) => {
+    setError('');
     try {
       await apiClient.patch(`/admin/comments/${id}/status`, { status });
-      fetchComments(); // Refresh list
-    } catch (error) {
-      console.error('Error moderating comment', error);
-      alert('Failed to moderate comment');
+      fetchComments();
+    } catch (error: any) {
+      setError(error.response?.data?.message || error.message || 'Failed to moderate comment');
     }
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this comment?')) return;
+    setError('');
     try {
       await apiClient.delete(`/admin/comments/${id}`);
       fetchComments();
-    } catch (error) {
-      console.error('Error deleting comment', error);
-      alert('Failed to delete comment');
+    } catch (error: any) {
+      setError(error.response?.data?.message || error.message || 'Failed to delete comment');
     }
   };
 
-  if (loading) return <div className="p-8">Loading comments...</div>;
+  if (loading) return <div className="p-8 font-mono text-xs uppercase tracking-widest">Loading comments...</div>;
 
   return (
     <div className="space-y-6">
@@ -53,6 +55,12 @@ export default function CommentsPage() {
         <h1 className="text-3xl font-black font-serif uppercase tracking-tighter">Comments</h1>
         <p className="text-muted-foreground font-mono text-sm uppercase tracking-widest mt-1">Moderate reader responses</p>
       </div>
+
+      {error && (
+        <div className="text-sm text-red-600 bg-red-50 border-2 border-red-200 sharp-corners p-2 font-mono text-xs">
+          {error}
+        </div>
+      )}
 
       <div className="space-y-4">
         {comments.length > 0 ? (

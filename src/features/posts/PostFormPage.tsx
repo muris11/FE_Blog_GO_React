@@ -16,6 +16,7 @@ export default function PostFormPage() {
   
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<any[]>([]);
+  const [error, setError] = useState('');
   
   const [formData, setFormData] = useState({
     title: '',
@@ -104,9 +105,8 @@ export default function PostFormPage() {
         await apiClient.post('/admin/posts', payload);
       }
       navigate('/admin/posts');
-    } catch (error) {
-      console.error('Error saving post', error);
-      alert('Failed to save post');
+    } catch (error: any) {
+      setError(error.response?.data?.message || error.message || 'Failed to save post');
     } finally {
       setLoading(false);
     }
@@ -137,6 +137,12 @@ export default function PostFormPage() {
           </Button>
         </div>
       </div>
+
+      {error && (
+        <div className="mb-6 text-sm text-red-600 bg-red-50 border-2 border-red-200 sharp-corners p-2 font-mono text-xs">
+          {error}
+        </div>
+      )}
 
       <form className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-2 space-y-6">
