@@ -123,6 +123,22 @@ export default function PublicHomePage() {
                     <CardDescription className="line-clamp-3 mb-6 font-body text-base text-foreground/80 flex-1 text-justify">
                       {post.excerpt}
                     </CardDescription>
+                    
+                    {post.tags && post.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 mb-4">
+                        {post.tags.slice(0, 3).map((tag: any) => (
+                          <span key={tag.id} className="text-[9px] font-mono border border-black px-1.5 py-0.5 uppercase">
+                            {tag.name}
+                          </span>
+                        ))}
+                        {post.tags.length > 3 && (
+                          <span className="text-[9px] font-mono border border-black px-1.5 py-0.5 uppercase">
+                            +{post.tags.length - 3}
+                          </span>
+                        )}
+                      </div>
+                    )}
+
                     <div className="flex items-center justify-between text-xs font-mono uppercase tracking-widest border-t border-black pt-4">
                       <span className="font-bold">BY {post.author.name}</span>
                       <span className="text-muted-foreground">{formatDate(post.published_at || post.created_at, 'MMM d, yyyy')}</span>
@@ -150,7 +166,14 @@ export default function PublicHomePage() {
                   <div className="flex p-4 items-center border-b border-black">
                     <div className="text-4xl font-serif font-black text-accent mr-4">{(index + 1).toString().padStart(2, '0')}</div>
                     <div className="flex-1">
-                      <div className="text-xs font-mono uppercase tracking-widest text-muted-foreground mb-1">{post.category.name}</div>
+                      <div className="text-xs font-mono uppercase tracking-widest text-muted-foreground mb-1">
+                        {post.category.name}
+                        {post.tags && post.tags.length > 0 && (
+                          <span className="ml-2 text-[9px] border border-muted-foreground px-1 py-0.5">
+                            {post.tags[0].name}
+                          </span>
+                        )}
+                      </div>
                       <CardTitle className="text-xl leading-tight font-serif font-black">
                         <Link to={`/blog/${post.slug}`} className="hover:text-accent transition-colors">{post.title}</Link>
                       </CardTitle>

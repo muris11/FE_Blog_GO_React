@@ -92,6 +92,22 @@ export default function BlogPage() {
                     <CardDescription className="line-clamp-3 mb-6 font-body text-base text-foreground/80 flex-1 text-justify">
                       {post.excerpt}
                     </CardDescription>
+
+                    {post.tags && post.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 mb-4">
+                        {post.tags.slice(0, 3).map((tag: any) => (
+                          <span key={tag.id} className="text-[9px] font-mono border border-black px-1.5 py-0.5 uppercase">
+                            {tag.name}
+                          </span>
+                        ))}
+                        {post.tags.length > 3 && (
+                          <span className="text-[9px] font-mono border border-black px-1.5 py-0.5 uppercase">
+                            +{post.tags.length - 3}
+                          </span>
+                        )}
+                      </div>
+                    )}
+
                     <div className="flex items-center justify-between text-xs font-mono uppercase tracking-widest border-t border-black pt-4">
                       <span className="font-bold">BY {post.author?.name || 'Staff'}</span>
                       <span className="text-muted-foreground">{formatDate(post.published_at || post.created_at, 'MMM d, yyyy')}</span>

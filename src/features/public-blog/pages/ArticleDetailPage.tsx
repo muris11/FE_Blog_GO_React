@@ -110,8 +110,15 @@ export default function ArticleDetailPage() {
       <main className="flex-1 container mx-auto px-4 py-8 newsprint-texture">
         <article className="border-x border-black max-w-5xl mx-auto bg-background">
           <header className="border-b-4 border-black p-8 md:p-12 text-center">
-            <div className="mb-6 inline-block border border-black px-4 py-1 font-mono text-xs uppercase tracking-widest text-accent">
-              {post.category?.name}
+            <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
+              <div className="border border-black bg-black text-white px-4 py-1 font-mono text-xs uppercase tracking-widest">
+                {post.category?.name}
+              </div>
+              {post.tags && post.tags.map((tag: any) => (
+                <div key={tag.id} className="border border-black px-3 py-1 font-mono text-xs uppercase tracking-widest text-accent">
+                  {tag.name}
+                </div>
+              ))}
             </div>
             <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black font-serif tracking-tighter mb-6 md:mb-8 leading-[0.9] text-foreground uppercase break-words hyphens-auto">
               {post.title}
@@ -136,18 +143,6 @@ export default function ArticleDetailPage() {
             {/* Left Sidebar (Meta/Tags) */}
             <div className="lg:col-span-3 border-b lg:border-b-0 lg:border-r border-black p-8">
                <div className="font-mono text-sm uppercase tracking-widest text-muted-foreground mb-4 border-b border-black pb-2">Article Index</div>
-               {post.tags && post.tags.length > 0 && (
-                <div className="mb-8">
-                  <div className="text-xs font-bold font-mono uppercase tracking-widest mb-3">Topics</div>
-                  <div className="flex flex-wrap gap-2">
-                    {post.tags.map((tag: any) => (
-                      <span key={tag.id} className="text-xs font-mono border border-black px-2 py-1 uppercase hover:bg-black hover:text-white transition-colors cursor-default">
-                        {tag.name}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
               <div className="text-xs font-mono uppercase tracking-widest border border-black p-4 text-center">
                 <span className="block text-accent font-bold mb-1">Edition</span>
                 Vol 1.0 - NYC
