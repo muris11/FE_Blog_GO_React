@@ -90,11 +90,7 @@ export default function ArticleDetailPage() {
       <header className="border-b-2 border-black bg-background sticky top-0 z-40">
         <div className="container mx-auto px-4 h-20 flex items-center justify-between">
           <Link to="/" className="text-3xl md:text-5xl font-black font-serif tracking-tighter uppercase text-foreground">
-            {settings.site_logo ? (
-              <img src={settings.site_logo} alt={settings.site_name || "BlogForge"} className="h-10 md:h-12 object-contain" />
-            ) : (
-              settings.site_name || 'BlogForge.'
-            )}
+            {settings.site_name || 'BlogForge.'}
           </Link>
           <nav className="hidden md:flex gap-8 font-mono text-sm uppercase tracking-widest">
             <Link to="/blog" className="text-foreground hover:text-accent transition-colors">Articles</Link>
