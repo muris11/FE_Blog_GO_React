@@ -162,7 +162,23 @@ export default function PublicHomePage() {
           <div className="mb-6 pb-6 border-b border-black inline-block px-12">
             <span className="text-2xl font-serif font-black tracking-tighter">{(settings.site_name || 'BLOGFORGE').toUpperCase()}</span>
           </div>
-          <p className="mb-2">{settings.footer_text || 'Edition: Vol 1.0 | Printed via React & Go'}</p>
+          <p className="mb-4">{settings.footer_text || 'Edition: Vol 1.0 | Printed via React & Go'}</p>
+          
+          {(settings.contact_email || (settings.social_links && settings.social_links.length > 0)) && (
+            <div className="flex flex-wrap items-center justify-center gap-4 mb-6">
+              {settings.contact_email && (
+                <a href={`mailto:${settings.contact_email}`} className="border border-black px-3 py-1 hover:bg-black hover:text-white transition-colors">
+                  Contact Editor
+                </a>
+              )}
+              {settings.social_links && settings.social_links.map((link: any, i: number) => (
+                <a key={i} href={link.url} target="_blank" rel="noopener noreferrer" className="border border-black px-3 py-1 hover:bg-black hover:text-white transition-colors">
+                  {link.platform}
+                </a>
+              ))}
+            </div>
+          )}
+          
           <p className="text-muted-foreground">&copy; {new Date().getFullYear()} {settings.site_name || 'BlogForge'}. All rights reserved.</p>
         </div>
       </footer>
