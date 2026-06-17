@@ -14,10 +14,12 @@ export function MediaSelector({ open, onOpenChange, onSelect }: MediaSelectorPro
   const [loading, setLoading] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState('');
 
   useEffect(() => {
     if (open) {
       fetchMedias();
+      setUploadError('');
     }
   }, [open]);
 
@@ -49,11 +51,10 @@ export function MediaSelector({ open, onOpenChange, onSelect }: MediaSelectorPro
       const res = await apiClient.post('/admin/media', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-      // Automatically select the newly uploaded image
       onSelect(res.data.data);
       onOpenChange(false);
-    } catch (error) {
-      console.error('Error uploading media', error);
+    } catch (error: any) {
+      setUploadError(error.response?.data?.message || error.message || 'Upload failed');
     } finally {
       setIsUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = '';
@@ -82,6 +83,12 @@ export function MediaSelector({ open, onOpenChange, onSelect }: MediaSelectorPro
             </div>
           </div>
         </DialogHeader>
+
+        {uploadError && (
+          <div className="mt-4 text-sm text-red-600 bg-red-50 border-2 border-red-200 sharp-corners p-2 font-mono text-xs">
+            {uploadError}
+          </div>
+        )}
 
         <div className="flex-1 overflow-y-auto py-4 pr-2">
           {loading ? (
