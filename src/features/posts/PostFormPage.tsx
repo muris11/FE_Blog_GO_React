@@ -56,7 +56,7 @@ export default function PostFormPage() {
           apiClient.get('/admin/categories'),
           apiClient.get('/admin/tags') // Kept for future use
         ]);
-        setCategories(catRes.data.data);
+        setCategories(catRes.data.data || []);
 
         if (isEditing) {
           const postRes = await apiClient.get(`/admin/posts/${id}`);

@@ -29,7 +29,7 @@ export default function TagsPage() {
   const fetchTags = async () => {
     try {
       const response = await apiClient.get('/admin/tags');
-      setTags(response.data.data);
+      setTags(response.data.data || []);
     } catch (error) {
       console.error('Error fetching tags', error);
     } finally {

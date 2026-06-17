@@ -22,7 +22,7 @@ export default function PostsPage() {
   const fetchPosts = async () => {
     try {
       const response = await apiClient.get('/admin/posts');
-      setPosts(response.data.data);
+      setPosts(response.data.data || []);
     } catch (error) {
       console.error('Error fetching posts', error);
     } finally {

@@ -32,7 +32,7 @@ export default function CategoriesPage() {
   const fetchCategories = async () => {
     try {
       const response = await apiClient.get('/admin/categories');
-      setCategories(response.data.data);
+      setCategories(response.data.data || []);
     } catch (error) {
       console.error('Error fetching categories', error);
     } finally {

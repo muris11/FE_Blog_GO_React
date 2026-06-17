@@ -36,8 +36,8 @@ export default function UsersPage() {
         apiClient.get('/admin/users'),
         apiClient.get('/admin/roles')
       ]);
-      setUsers(usersRes.data.data);
-      setRoles(rolesRes.data.data);
+      setUsers(usersRes.data.data || []);
+      setRoles(rolesRes.data.data || []);
     } catch (error) {
       console.error('Error fetching users data', error);
     } finally {
